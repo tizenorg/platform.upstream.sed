@@ -6,7 +6,6 @@ License:        GPL-3.0+
 Group:          System/Base
 Url:            http://www.gnu.org/directory/sed.html
 Source:         %name-%version.tar.bz2
-PreReq:         %install_info_prereq
 Provides:       base:/bin/sed
 BuildRequires:  automake
 
