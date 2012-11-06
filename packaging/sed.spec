@@ -1,47 +1,51 @@
-#
-# Please submit bugfixes or comments via http://bugs.tizen.org/
-#
-
 Name:           sed
-Version:        4.1.5
-Release:        1
-License:        GPL-2.0+
-Summary:        A GNU stream text editor
-Url:            http://sed.sourceforge.net/
-Group:          Applications/Text
-Source0:        ftp://ftp.gnu.org/pub/gnu/sed/sed-%{version}.tar.gz
+Version:        4.2.1
+Release:        0
+Summary:        A Stream-Oriented Non-Interactive Text Editor
+License:        GPL-3.0+
+Group:          System/Base
+Url:            http://www.gnu.org/directory/sed.html
+Source:         %name-%version.tar.bz2
+PreReq:         %install_info_prereq
+Provides:       base:/bin/sed
+BuildRequires:  automake
 
 %description
-The sed (Stream EDitor) editor is a stream or batch (non-interactive)
-editor.  Sed takes text as input, performs an operation or set of
-operations on the text and outputs the modified text.  The operations
-that sed performs (substitutions, deletions, insertions, etc.) can be
-specified in a script file or from the command line.
+Sed takes text input, performs one or more operations on it, and
+outputs the modified text. Sed is typically used for extracting parts
+of a file using pattern matching or  for substituting multiple
+occurrences of a string within a file.
 
 %prep
 %setup -q
 
-
 %build
-
-%configure --disable-static \
-    --without-included-regex \
-    --bindir=%{_bindir} \
-    --disable-nls
-
-make %{?_smp_mflags}
-
-%check
-make check
-
+%define warn_flags -Wall -Wstrict-prototypes -Wpointer-arith -Wformat-security
+export CFLAGS="%{optflags} %warn_flags"
+./configure	--prefix=/usr \
+		--mandir=%{_mandir} \
+		--infodir=%{_infodir} \
+		--disable-nls \
+		--without-included-regex \
+		%{_target_cpu}-suse-linux
+%if %do_profiling
+  make %{?_smp_mflags} CFLAGS="$CFLAGS "%cflags_profile_generate
+  make %{?_smp_mflags} check
+  make clean
+  make %{?_smp_mflags} CFLAGS="$CFLAGS "%cflags_profile_feedback
+%else
+  make %{?_smp_mflags}
+%endif
+make %{?_smp_mflags} check
 
 %install
 %make_install
 
-%remove_docs
 
+%docs_package
 
-%files
+%files 
+%defattr(-, root, root)
 %{_bindir}/sed
-
+%doc COPYING*
 
