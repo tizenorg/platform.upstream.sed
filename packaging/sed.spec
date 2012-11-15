@@ -26,7 +26,7 @@ export CFLAGS="%{optflags} %warn_flags"
 		--infodir=%{_infodir} \
 		--disable-nls \
 		--without-included-regex \
-		%{_target_cpu}-suse-linux
+		%{_target_cpu}-tizen-linux
 %if %do_profiling
   make %{?_smp_mflags} CFLAGS="$CFLAGS "%cflags_profile_generate
   make %{?_smp_mflags} check
