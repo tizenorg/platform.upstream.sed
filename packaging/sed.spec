@@ -8,6 +8,7 @@ Url:            http://www.gnu.org/directory/sed.html
 Source:         %name-%version.tar.bz2
 Provides:       base:/bin/sed
 BuildRequires:  automake
+Provides:       /bin/sed
 
 %description
 Sed takes text input, performs one or more operations on it, and
