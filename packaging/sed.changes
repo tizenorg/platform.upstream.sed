@@ -1,3 +1,6 @@
+* Fri Mar 22 2013 Anas Nashif <anas.nashif@intel.com> submit/trunk/20121230.160228@325f398
+- Fixed package groups
+
 * Sun Dec 30 2012 Anas Nashif <anas.nashif@intel.com> upstream/4.2.1@3bc8d68
 - provide /bin/sed
 
