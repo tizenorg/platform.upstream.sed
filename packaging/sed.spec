@@ -3,7 +3,7 @@ Version:        4.2.1
 Release:        0
 Summary:        A Stream-Oriented Non-Interactive Text Editor
 License:        GPL-3.0+
-Group:          System/Base
+Group:          Base/Tools
 Url:            http://www.gnu.org/directory/sed.html
 Source:         %name-%version.tar.bz2
 Provides:       base:/bin/sed
