@@ -6,6 +6,7 @@ License:        GPL-3.0+
 Group:          Base/Tools
 Url:            http://www.gnu.org/directory/sed.html
 Source:         %name-%version.tar.bz2
+Source1001: 	sed.manifest
 Provides:       base:/bin/sed
 BuildRequires:  automake
 Provides:       /bin/sed
@@ -18,6 +19,7 @@ occurrences of a string within a file.
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 %define warn_flags -Wall -Wstrict-prototypes -Wpointer-arith -Wformat-security
@@ -45,6 +47,7 @@ make %{?_smp_mflags} check
 %docs_package
 
 %files 
+%manifest %{name}.manifest
 %defattr(-, root, root)
 %{_bindir}/sed
 %doc COPYING*
