@@ -21,9 +21,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #ifdef gettext_noop
 # define N_(String) gettext_noop(String)
@@ -235,8 +233,8 @@ match_regex(regex, buf, buflen, buf_start_offset, regarray, regsize)
     regex_last = regex;
 
 #ifdef REG_PERL
-  regmatch[0].rm_so = CAST(int)buf_start_offset;
-  regmatch[0].rm_eo = CAST(int)buflen;
+  regmatch[0].rm_so = (int)buf_start_offset;
+  regmatch[0].rm_eo = (int)buflen;
   ret = regexec (&regex->pattern, buf, regsize, regmatch, REG_STARTEND);
 
   if (regsize)
@@ -264,6 +262,6 @@ release_regex(regex)
   struct regex *regex;
 {
   regfree(&regex->pattern);
-  FREE(regex);
+  free(regex);
 }
 #endif /*DEBUG_LEAKS*/

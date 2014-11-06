@@ -8,11 +8,11 @@ PACKAGE = sed
 
 SUBDIRS = lib po sed doc testsuite
 
-noinst_DATA = bootstrap.sh
+noinst_DATA =
 noinst_HEADERS = basicdefs.h
 
-EXTRA_DIST = BUGS THANKS COPYING.DOC README.boot \
-	autoboot build-aux/texi2dvi build-aux/help2man
+EXTRA_DIST = BUGS THANKS COPYING.DOC \
+	bootstrap bootstrap.conf build-aux/texi2dvi build-aux/help2man
 
 html:
 	cd doc && make html
@@ -23,9 +23,6 @@ EXTRA_DC_FLAGS =
 dist-hook:
 	test $(COPYRIGHT_YEAR) = `date +%Y` || \
 	  { echo Copyright year not updated; exit 1; }
-	cmp bootstrap.sh $(srcdir)/bootstrap.sh > /dev/null 2>&1 || \
-	  cp -p bootstrap.sh $(srcdir)/bootstrap.sh
-	cp -p $(srcdir)/bootstrap.sh $(distdir)/bootstrap.sh
 
 full-distcheck:
 	make distcheck EXTRA_DC_FLAGS='--enable-regex-tests'

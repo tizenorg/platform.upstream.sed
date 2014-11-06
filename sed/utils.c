@@ -1,5 +1,5 @@
 /*  Functions from hack's utils library.
-    Copyright (C) 1989, 1990, 1991, 1998, 1999, 2003, 2008, 2009
+    Copyright (C) 1989, 1990, 1991, 1998, 1999, 2003, 2008, 2009, 2011
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -21,20 +21,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <errno.h>
-#ifndef errno
-  extern int errno;
-#endif
-
-#ifdef HAVE_STRINGS_H
-# include <strings.h>
-#else
-# include <string.h>
-#endif /* HAVE_STRINGS_H */
-
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif /* HAVE_STDLIB_H */
-
+#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -42,6 +30,7 @@
 
 #include "utils.h"
 #include "pathmax.h"
+#include "fwriting.h"
 
 const char *myname;
 
@@ -58,7 +47,7 @@ struct open_file
   };
 
 static struct open_file *open_files = NULL;
-static void do_ck_fclose P_((FILE *fp));
+static void do_ck_fclose (FILE *fp);
 
 /* Print an error message and exit */
 
@@ -69,15 +58,7 @@ panic(const char *str, ...)
 
   fprintf(stderr, "%s: ", myname);
   va_start(ap, str);
-#ifndef HAVE_VPRINTF
-# ifndef HAVE_DOPRNT
-  fputs(str, stderr);	/* not great, but perhaps better than nothing... */
-# else /* HAVE_DOPRNT */
-  _doprnt(str, &ap, stderr);
-# endif /* HAVE_DOPRNT */
-#else /* HAVE_VFPRINTF */
   vfprintf(stderr, str, ap);
-#endif /* HAVE_VFPRINTF */
   va_end(ap);
   putc('\n', stderr);
 
@@ -101,7 +82,7 @@ panic(const char *str, ...)
 
 
 /* Internal routine to get a filename from open_files */
-static const char *utils_fp_name P_((FILE *fp));
+static const char *utils_fp_name (FILE *fp);
 static const char *
 utils_fp_name(fp)
   FILE *fp;
@@ -132,7 +113,7 @@ register_open_file (fp, name, temp)
     {
       if (fp == p->fp)
 	{
-	  FREE(p->name);
+	  free(p->name);
 	  break;
 	}
     }
@@ -193,9 +174,10 @@ ck_fdopen(fd, name, mode, fail)
 }
 
 FILE *
-ck_mkstemp (p_filename, tmpdir, base)
+ck_mkstemp (p_filename, tmpdir, base, mode)
   char **p_filename;
-  char *base, *tmpdir;
+  const char *base, *tmpdir;
+  const char *mode;
 {
   char *template;
   FILE *fp;
@@ -219,15 +201,17 @@ ck_mkstemp (p_filename, tmpdir, base)
   sprintf (template, "%s/%sXXXXXX", tmpdir, base);
 
    /* The ownership might change, so omit some permissions at first
-      so unauthorized users cannot nip in before the file is ready.  */
+      so unauthorized users cannot nip in before the file is ready.
+    
+      mkstemp forces O_BINARY on cygwin, so use mkostemp instead.  */
   save_umask = umask (0700);
-  fd = mkstemp (template);
+  fd = mkostemp (template, 0);
   umask (save_umask);
   if (fd == -1)
     panic(_("couldn't open temporary file %s: %s"), template, strerror(errno));
 
   *p_filename = template;
-  fp = fdopen (fd, "w");
+  fp = fdopen (fd, mode);
   register_open_file (fp, template, true);
   return fp;
 }
@@ -235,7 +219,7 @@ ck_mkstemp (p_filename, tmpdir, base)
 /* Panic on failing fwrite */
 void
 ck_fwrite(ptr, size, nmemb, stream)
-  const VOID *ptr;
+  const void *ptr;
   size_t size;
   size_t nmemb;
   FILE *stream;
@@ -250,7 +234,7 @@ ck_fwrite(ptr, size, nmemb, stream)
 /* Panic on failing fread */
 size_t
 ck_fread(ptr, size, nmemb, stream)
-  VOID *ptr;
+  void *ptr;
   size_t size;
   size_t nmemb;
   FILE *stream;
@@ -263,16 +247,23 @@ ck_fread(ptr, size, nmemb, stream)
 }
 
 size_t
-ck_getline(text, buflen, stream)
+ck_getdelim(text, buflen, buffer_delimiter, stream)
   char **text;
   size_t *buflen;
+  char buffer_delimiter;
   FILE *stream;
 {
-  int result;
-  if (!ferror (stream))
-    result = getline (text, buflen, stream);
+  ssize_t result;
+  bool error;
 
-  if (ferror (stream))
+  error = ferror (stream);
+  if (!error)
+    {
+      result = getdelim (text, buflen, buffer_delimiter, stream);
+      error = ferror (stream);
+    }
+
+  if (error)
     panic (_("read error on %s: %s"), utils_fp_name(stream), strerror(errno));
 
   return result;
@@ -283,6 +274,9 @@ void
 ck_fflush(stream)
   FILE *stream;
 {
+  if (!fwriting(stream))
+    return;
+
   clearerr(stream);
   if (fflush(stream) == EOF && errno != EBADF)
     panic("couldn't flush %s: %s", utils_fp_name(stream), strerror(errno));
@@ -306,8 +300,8 @@ ck_fclose(stream)
 	{
 	  do_ck_fclose (cur->fp);
 	  prev->link = cur->link;
-	  FREE(cur->name);
-	  FREE(cur);
+	  free(cur->name);
+	  free(cur);
 	}
       else
 	prev = cur;
@@ -447,27 +441,27 @@ ck_rename (from, to, unlink_if_fail)
 
 
 /* Panic on failing malloc */
-VOID *
+void *
 ck_malloc(size)
   size_t size;
 {
-  VOID *ret = calloc(1, size ? size : 1);
+  void *ret = calloc(1, size ? size : 1);
   if (!ret)
     panic("couldn't allocate memory");
   return ret;
 }
 
 /* Panic on failing realloc */
-VOID *
+void *
 ck_realloc(ptr, size)
-  VOID *ptr;
+  void *ptr;
   size_t size;
 {
-  VOID *ret;
+  void *ret;
 
   if (size == 0)
     {
-      FREE(ptr);
+      free(ptr);
       return NULL;
     }
   if (!ptr)
@@ -488,22 +482,13 @@ ck_strdup(str)
 }
 
 /* Return a malloc()'d copy of a block of memory */
-VOID *
+void *
 ck_memdup(buf, len)
-  const VOID *buf;
+  const void *buf;
   size_t len;
 {
-  VOID *ret = ck_malloc(len);
+  void *ret = ck_malloc(len);
   return memcpy(ret, buf, len);
-}
-
-/* Release a malloc'd block of memory */
-void
-ck_free(ptr)
-  VOID *ptr;
-{
-  if (ptr)
-    free(ptr);
 }
 
 
@@ -543,7 +528,7 @@ size_buffer(b)
   return b->length;
 }
 
-static void resize_buffer P_((struct buffer *b, size_t newlen));
+static void resize_buffer (struct buffer *b, size_t newlen);
 static void
 resize_buffer(b, newlen)
   struct buffer *b;
@@ -609,6 +594,6 @@ free_buffer(b)
   struct buffer *b;
 {
   if (b)
-    FREE(b->b);
-  FREE(b);
+    free(b->b);
+  free(b);
 }

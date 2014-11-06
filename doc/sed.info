@@ -1,4 +1,4 @@
-This is ../../doc/sed.info, produced by makeinfo version 4.12 from
+This is ../../doc/sed.info, produced by makeinfo version 4.13 from
 ../../doc//config.texi.
 
 INFO-DIR-SECTION Text creation and manipulation
@@ -7,7 +7,7 @@ START-INFO-DIR-ENTRY
 
 END-INFO-DIR-ENTRY
 
-   This file documents version 4.2.1 of GNU `sed', a stream editor.
+   This file documents version 4.2.2 of GNU `sed', a stream editor.
 
    Copyright (C) 1998, 1999, 2001, 2002, 2003, 2004 Free Software
 Foundation, Inc.
@@ -30,7 +30,7 @@ File: sed.info,  Node: Top,  Next: Introduction,  Up: (dir)
 sed, a stream editor
 ********************
 
-This file documents version 4.2.1 of GNU `sed', a stream editor.
+This file documents version 4.2.2 of GNU `sed', a stream editor.
 
    Copyright (C) 1998, 1999, 2001, 2002, 2003, 2004 Free Software
 Foundation, Inc.
@@ -245,6 +245,13 @@ specifies a script to be executed, that is if neither of the `-e' and
      -f', and you wish to see the transformed output as soon as
      possible.)
 
+`-z'
+`--null-data'
+`--zero-terminated'
+     Treat the input as a set of lines, each terminated by a zero byte
+     (the ASCII `NUL' character) instead of a newline.  This option can
+     be used with commands like `sort -z' and `find -print0' to process
+     arbitrary file names.
 
    If no `-e', `-f', `--expression', or `--file' options are given on
 the command-line, then the first non-option argument on the command
@@ -277,6 +284,13 @@ document will refer to "the" `sed' script; this is understood to mean
 the in-order catenation of all of the SCRIPTs and SCRIPT-FILEs passed
 in.
 
+   Commands within a SCRIPT or SCRIPT-FILE can be separated by
+semicolons (`;') or newlines (ASCII 10).  Some commands, due to their
+syntax, cannot be followed by semicolons working as command separators
+and thus should be terminated with newlines or be placed at the end of
+a SCRIPT or SCRIPT-FILE.  Commands can also be preceded with optional
+non-significant whitespace characters.
+
    Each `sed' command consists of an optional address or address range,
 followed by a one-character command name and any additional
 command-specific code.
@@ -302,7 +316,7 @@ File: sed.info,  Node: Execution Cycle,  Next: Addresses,  Up: sed Programs
 `sed' maintains two data buffers: the active _pattern_ space, and the
 auxiliary _hold_ space. Both are initially empty.
 
-   `sed' operates by performing the following cycle on each lines of
+   `sed' operates by performing the following cycle on each line of
 input: first, `sed' reads one line from the input stream, removes any
 trailing newline, and places it in the pattern space.  Then commands
 are executed; each command can have an address associated to it:
@@ -382,11 +396,13 @@ Addresses in a `sed' script can be in any of the following forms:
 `/REGEXP/M'
 `\%REGEXP%M'
      The `M' modifier to regular-expression matching is a GNU `sed'
-     extension which causes `^' and `$' to match respectively (in
-     addition to the normal behavior) the empty string after a newline,
-     and the empty string before a newline.  There are special character
-     sequences (`\`' and `\'') which always match the beginning or the
-     end of the buffer.  `M' stands for `multi-line'.
+     extension which directs GNU `sed' to match the regular expression
+     in `multi-line' mode.  The modifier causes `^' and `$' to match
+     respectively (in addition to the normal behavior) the empty string
+     after a newline, and the empty string before a newline.  There are
+     special character sequences (`\`' and `\'') which always match the
+     beginning or the end of the buffer.  In addition, the period
+     character does not match a new-line character in multi-line mode.
 
 
    If no addresses are given, then all lines are matched; if one
@@ -604,7 +620,7 @@ Examples:
      second matches only strings containing at least one character.
 
 `^main.*(.*)'
-     his matches a string starting with `main', followed by an opening
+     This matches a string starting with `main', followed by an opening
      and closing parenthesis.  The `n', `(' and `)' need not be
      adjacent.
 
@@ -737,6 +753,24 @@ follows:
 `\E'
      Stop case conversion started by `\L' or `\U'.
 
+   When the `g' flag is being used, case conversion does not propagate
+from one occurrence of the regular expression to another.  For example,
+when the following command is executed with `a-b-' in pattern space:
+     s/\(b\?\)-/x\u\1/g
+
+the output is `axxB'.  When replacing the first `-', the `\u' sequence
+only affects the empty replacement of `\1'.  It does not affect the `x'
+character that is added to pattern space when replacing `b-' with `xB'.
+
+   On the other hand, `\l' and `\u' do affect the remainder of the
+replacement text if they are followed by an empty substitution.  With
+`a-b-' in pattern space, the following command:
+     s/\(b\?\)-/\u\1x/g
+
+will replace `-' with `X' (uppercase) and `b-' with `Bx'.  If this
+behavior is undesirable, you can prevent it by adding a `\E'
+sequence--after `\1' in this case.
+
    To include a literal `\', `&', or newline in the final replacement,
 be sure to precede the desired `\', `&', or newline in the REPLACEMENT
 with a `\'.
@@ -794,11 +828,13 @@ FLAGS:
 `M'
 `m'
      The `M' modifier to regular-expression matching is a GNU `sed'
-     extension which causes `^' and `$' to match respectively (in
-     addition to the normal behavior) the empty string after a newline,
-     and the empty string before a newline.  There are special character
-     sequences (`\`' and `\'') which always match the beginning or the
-     end of the buffer.  `M' stands for `multi-line'.
+     extension which directs GNU `sed' to match the regular expression
+     in `multi-line' mode.  The modifier causes `^' and `$' to match
+     respectively (in addition to the normal behavior) the empty string
+     after a newline, and the empty string before a newline.  There are
+     special character sequences (`\`' and `\'') which always match the
+     beginning or the end of the buffer.  In addition, the period
+     character does not match a new-line character in multi-line mode.
 
 
    ---------- Footnotes ----------
@@ -899,15 +935,15 @@ commands.
      which writes to the standard output.(1)
 
      The file will be created (or truncated) before the first input
-     line is read; all `w' commands (including instances of `w' flag on
-     successful `s' commands) which refer to the same FILENAME are
+     line is read; all `w' commands (including instances of the `w' flag
+     on successful `s' commands) which refer to the same FILENAME are
      output without closing and reopening the file.
 
 `D'
-     Delete text in the pattern space up to the first newline.  If any
-     text is left, restart cycle with the resultant pattern space
-     (without reading a new line of input), otherwise start a normal
-     new cycle.
+     If pattern space contains no newline, start a normal new cycle as
+     if the `d' command was issued.  Otherwise, delete text in the
+     pattern space up to the first newline, and restart cycle with the
+     resultant pattern space, without reading a new line of input.
 
 `N'
      Add a newline to the pattern space, then append the next line of
@@ -986,12 +1022,20 @@ are required quite often, yet are unsupported by standard `sed's.
      space with the output; a trailing newline is suppressed.
 
      If a parameter is specified, instead, the `e' command interprets
-     it as a command and sends its output to the output stream (like
-     `r' does).  The command can run across multiple lines, all but the
-     last ending with a back-slash.
+     it as a command and sends its output to the output stream.  The
+     command can run across multiple lines, all but the last ending with
+     a back-slash.
 
      In both cases, the results are undefined if the command to be
      executed contains a NUL character.
+
+     Note that, unlike the `r' command, the output of the command will
+     be printed immediately; the `r' command instead delays the output
+     to the end of the current cycle.
+
+`F'
+     Print out the file name of the current input file (with a trailing
+     newline).
 
 `L N'
      This GNU `sed' extension fills and joins lines in pattern space to
@@ -1250,7 +1294,7 @@ underscores with zeros.
 
      /[^0-9]/ d
 
-     # replace all leading 9s by _ (any other character except digits, could
+     # replace all trailing 9s by _ (any other character except digits, could
      # be used)
      :d
      s/9\(_*\)$/_\1/
@@ -1258,9 +1302,6 @@ underscores with zeros.
 
      # incr last digit only.  The first line adds a most-significant
      # digit of 1 if we have to add a digit.
-     #
-     # The `tn' commands are not necessary, but make the thing
-     # faster
 
      s/^\(_*\)$/1\1/; tn
      s/8\(_*\)$/9\1/; tn
@@ -1381,8 +1422,11 @@ parameterized using shell variables and proper quoting.
      G
 
      # check if converted file name is equal to original file name,
-     # if it is, do not print nothing
+     # if it is, do not print anything
      /^.*\/\(.*\)\n\1/b
+
+     # escape special characters for the shell
+     s/["$`\\]/\\&/g
 
      # now, transform path/fromfile\n, into
      # mv path/fromfile path/tofile and print it
@@ -2042,8 +2086,7 @@ File: sed.info,  Node: Reporting Bugs,  Next: Extended regexps,  Prev: Other Res
 7 Reporting Bugs
 ****************
 
-Email bug reports to <bonzini@gnu.org>.  Be sure to include the word
-"sed" somewhere in the `Subject:' field.  Also, please include the
+Email bug reports to <bug-sed@gnu.org>.  Also, please include the
 output of `sed --version' in the body of your report if at all possible.
 
    Please do not send a bug report like this:
@@ -2189,11 +2232,13 @@ Appendix A Extended regular expressions
 ***************************************
 
 The only difference between basic and extended regular expressions is in
-the behavior of a few characters: `?', `+', parentheses, and braces
-(`{}').  While basic regular expressions require these to be escaped if
-you want them to behave as special characters, when using extended
+the behavior of a few characters: `?', `+', parentheses, braces (`{}'),
+and `|'.  While basic regular expressions require these to be escaped
+if you want them to behave as special characters, when using extended
 regular expressions you must escape them if you want them _to match a
-literal character_.
+literal character_.  `|' is special here because `\|' is a GNU
+extension - standard basic regular expressions do not provide its
+functionality.
 
 Examples:
 `abc?'
@@ -2229,10 +2274,10 @@ exception of the `sed' commands and command-line options.
  [index ]
 * Menu:
 
-* 0 address:                             Reporting Bugs.      (line 103)
+* 0 address:                             Reporting Bugs.      (line 102)
 * Additional reading about sed:          Other Resources.     (line   6)
-* ADDR1,+N:                              Addresses.           (line  78)
-* ADDR1,~N:                              Addresses.           (line  78)
+* ADDR1,+N:                              Addresses.           (line  80)
+* ADDR1,~N:                              Addresses.           (line  80)
 * Address, as a regular expression:      Addresses.           (line  27)
 * Address, last line:                    Addresses.           (line  22)
 * Address, numeric:                      Addresses.           (line   8)
@@ -2242,18 +2287,18 @@ exception of the `sed' commands and command-line options.
 * Append pattern space to hold space:    Other Commands.      (line 117)
 * Appending text after a line:           Other Commands.      (line  27)
 * Backreferences, in regular expressions: The "s" Command.    (line  19)
-* Branch to a label, if s/// failed:     Extended Commands.   (line  63)
+* Branch to a label, if s/// failed:     Extended Commands.   (line  71)
 * Branch to a label, if s/// succeeded:  Programming Commands.
                                                               (line  22)
 * Branch to a label, unconditionally:    Programming Commands.
                                                               (line  18)
 * Buffer spaces, pattern and hold:       Execution Cycle.     (line   6)
 * Bugs, reporting:                       Reporting Bugs.      (line   6)
-* Case-insensitive matching:             The "s" Command.     (line  94)
+* Case-insensitive matching:             The "s" Command.     (line 112)
 * Caveat -- #n on first line:            Common Commands.     (line  20)
 * Command groups:                        Common Commands.     (line  50)
 * Comments, in scripts:                  Common Commands.     (line  12)
-* Conditional branch <1>:                Extended Commands.   (line  63)
+* Conditional branch <1>:                Extended Commands.   (line  71)
 * Conditional branch:                    Programming Commands.
                                                               (line  22)
 * Copy hold space into pattern space:    Other Commands.      (line 121)
@@ -2261,78 +2306,80 @@ exception of the `sed' commands and command-line options.
 * Delete first line from pattern space:  Other Commands.      (line  99)
 * Disabling autoprint, from command line: Invoking sed.       (line  34)
 * empty regular expression:              Addresses.           (line  31)
-* Emptying pattern space <1>:            Reporting Bugs.      (line 130)
-* Emptying pattern space:                Extended Commands.   (line  85)
+* Emptying pattern space <1>:            Reporting Bugs.      (line 129)
+* Emptying pattern space:                Extended Commands.   (line  93)
 * Evaluate Bourne-shell commands:        Extended Commands.   (line  12)
 * Evaluate Bourne-shell commands, after substitution: The "s" Command.
-                                                              (line  85)
+                                                              (line 103)
 * Exchange hold space with pattern space: Other Commands.     (line 129)
-* Excluding lines:                       Addresses.           (line 101)
+* Excluding lines:                       Addresses.           (line 103)
 * Extended regular expressions, choosing: Invoking sed.       (line 113)
 * Extended regular expressions, syntax:  Extended regexps.    (line   6)
-* Files to be processed as input:        Invoking sed.        (line 141)
+* File name, printing:                   Extended Commands.   (line  30)
+* Files to be processed as input:        Invoking sed.        (line 148)
 * Flow of control in scripts:            Programming Commands.
                                                               (line  11)
-* Global substitution:                   The "s" Command.     (line  51)
+* Global substitution:                   The "s" Command.     (line  69)
 * GNU extensions, /dev/stderr file <1>:  Other Commands.      (line  88)
-* GNU extensions, /dev/stderr file:      The "s" Command.     (line  78)
-* GNU extensions, /dev/stdin file <1>:   Extended Commands.   (line  53)
+* GNU extensions, /dev/stderr file:      The "s" Command.     (line  96)
+* GNU extensions, /dev/stdin file <1>:   Extended Commands.   (line  61)
 * GNU extensions, /dev/stdin file:       Other Commands.      (line  78)
 * GNU extensions, /dev/stdout file <1>:  Other Commands.      (line  88)
-* GNU extensions, /dev/stdout file <2>:  The "s" Command.     (line  78)
-* GNU extensions, /dev/stdout file:      Invoking sed.        (line 149)
-* GNU extensions, 0 address <1>:         Reporting Bugs.      (line 103)
-* GNU extensions, 0 address:             Addresses.           (line  78)
-* GNU extensions, 0,ADDR2 addressing:    Addresses.           (line  78)
-* GNU extensions, ADDR1,+N addressing:   Addresses.           (line  78)
-* GNU extensions, ADDR1,~N addressing:   Addresses.           (line  78)
-* GNU extensions, branch if s/// failed: Extended Commands.   (line  63)
+* GNU extensions, /dev/stdout file <2>:  The "s" Command.     (line  96)
+* GNU extensions, /dev/stdout file:      Invoking sed.        (line 156)
+* GNU extensions, 0 address <1>:         Reporting Bugs.      (line 102)
+* GNU extensions, 0 address:             Addresses.           (line  80)
+* GNU extensions, 0,ADDR2 addressing:    Addresses.           (line  80)
+* GNU extensions, ADDR1,+N addressing:   Addresses.           (line  80)
+* GNU extensions, ADDR1,~N addressing:   Addresses.           (line  80)
+* GNU extensions, branch if s/// failed: Extended Commands.   (line  71)
 * GNU extensions, case modifiers in s commands: The "s" Command.
                                                               (line  23)
 * GNU extensions, checking for their presence: Extended Commands.
-                                                              (line  69)
+                                                              (line  77)
 * GNU extensions, disabling:             Invoking sed.        (line  81)
-* GNU extensions, emptying pattern space <1>: Reporting Bugs. (line 130)
-* GNU extensions, emptying pattern space: Extended Commands.  (line  85)
+* GNU extensions, emptying pattern space <1>: Reporting Bugs. (line 129)
+* GNU extensions, emptying pattern space: Extended Commands.  (line  93)
 * GNU extensions, evaluating Bourne-shell commands <1>: Extended Commands.
                                                               (line  12)
 * GNU extensions, evaluating Bourne-shell commands: The "s" Command.
-                                                              (line  85)
+                                                              (line 103)
 * GNU extensions, extended regular expressions: Invoking sed. (line 113)
 * GNU extensions, g and NUMBER modifier interaction in s command: The "s" Command.
-                                                              (line  57)
-* GNU extensions, I modifier <1>:        The "s" Command.     (line  94)
+                                                              (line  75)
+* GNU extensions, I modifier <1>:        The "s" Command.     (line 112)
 * GNU extensions, I modifier:            Addresses.           (line  49)
-* GNU extensions, in-place editing <1>:  Reporting Bugs.      (line  85)
+* GNU extensions, in-place editing <1>:  Reporting Bugs.      (line  84)
 * GNU extensions, in-place editing:      Invoking sed.        (line  51)
-* GNU extensions, L command:             Extended Commands.   (line  26)
-* GNU extensions, M modifier:            The "s" Command.     (line  99)
+* GNU extensions, L command:             Extended Commands.   (line  34)
+* GNU extensions, M modifier <1>:        The "s" Command.     (line 117)
+* GNU extensions, M modifier:            Addresses.           (line  54)
 * GNU extensions, modifiers and the empty regular expression: Addresses.
                                                               (line  31)
 * GNU extensions, N~M addresses:         Addresses.           (line  13)
-* GNU extensions, quitting silently:     Extended Commands.   (line  36)
-* GNU extensions, R command:             Extended Commands.   (line  53)
+* GNU extensions, quitting silently:     Extended Commands.   (line  44)
+* GNU extensions, R command:             Extended Commands.   (line  61)
 * GNU extensions, reading a file a line at a time: Extended Commands.
-                                                              (line  53)
-* GNU extensions, reformatting paragraphs: Extended Commands. (line  26)
+                                                              (line  61)
+* GNU extensions, reformatting paragraphs: Extended Commands. (line  34)
 * GNU extensions, returning an exit code <1>: Extended Commands.
-                                                              (line  36)
+                                                              (line  44)
 * GNU extensions, returning an exit code: Common Commands.    (line  30)
 * GNU extensions, setting line length:   Other Commands.      (line  65)
-* GNU extensions, special escapes <1>:   Reporting Bugs.      (line  78)
+* GNU extensions, special escapes <1>:   Reporting Bugs.      (line  77)
 * GNU extensions, special escapes:       Escapes.             (line   6)
-* GNU extensions, special two-address forms: Addresses.       (line  78)
+* GNU extensions, special two-address forms: Addresses.       (line  80)
 * GNU extensions, subprocesses <1>:      Extended Commands.   (line  12)
-* GNU extensions, subprocesses:          The "s" Command.     (line  85)
+* GNU extensions, subprocesses:          The "s" Command.     (line 103)
 * GNU extensions, to basic regular expressions <1>: Reporting Bugs.
-                                                              (line  51)
+                                                              (line  50)
 * GNU extensions, to basic regular expressions: Regular Expressions.
                                                               (line  26)
 * GNU extensions, two addresses supported by most commands: Other Commands.
                                                               (line  25)
 * GNU extensions, unlimited line length: Limitations.         (line   6)
 * GNU extensions, writing first line to a file: Extended Commands.
-                                                              (line  80)
+                                                              (line  88)
 * Goto, in scripts:                      Programming Commands.
                                                               (line  18)
 * Greedy regular expression matching:    Regular Expressions. (line 143)
@@ -2343,7 +2390,7 @@ exception of the `sed' commands and command-line options.
 * Hold space, copying pattern space into: Other Commands.     (line 113)
 * Hold space, definition:                Execution Cycle.     (line   6)
 * Hold space, exchange with pattern space: Other Commands.    (line 129)
-* In-place editing:                      Reporting Bugs.      (line  85)
+* In-place editing:                      Reporting Bugs.      (line  84)
 * In-place editing, activating:          Invoking sed.        (line  51)
 * In-place editing, Perl-style backup file names: Invoking sed.
                                                               (line  62)
@@ -2360,78 +2407,78 @@ exception of the `sed' commands and command-line options.
 * Line, selecting last:                  Addresses.           (line  22)
 * List pattern space:                    Other Commands.      (line  65)
 * Mixing g and NUMBER modifiers in the s command: The "s" Command.
-                                                              (line  57)
+                                                              (line  75)
 * Next input line, append to pattern space: Other Commands.   (line 105)
 * Next input line, replace pattern space with: Common Commands.
                                                               (line  44)
-* Non-bugs, 0 address:                   Reporting Bugs.      (line 103)
-* Non-bugs, in-place editing:            Reporting Bugs.      (line  85)
-* Non-bugs, localization-related:        Reporting Bugs.      (line 112)
-* Non-bugs, N command on the last line:  Reporting Bugs.      (line  31)
-* Non-bugs, regex syntax clashes:        Reporting Bugs.      (line  51)
+* Non-bugs, 0 address:                   Reporting Bugs.      (line 102)
+* Non-bugs, in-place editing:            Reporting Bugs.      (line  84)
+* Non-bugs, localization-related:        Reporting Bugs.      (line 111)
+* Non-bugs, N command on the last line:  Reporting Bugs.      (line  30)
+* Non-bugs, regex syntax clashes:        Reporting Bugs.      (line  50)
 * Parenthesized substrings:              The "s" Command.     (line  19)
 * Pattern space, definition:             Execution Cycle.     (line   6)
-* Perl-style regular expressions, multiline: Addresses.       (line  54)
 * Portability, comments:                 Common Commands.     (line  15)
 * Portability, line length limitations:  Limitations.         (line   6)
-* Portability, N command on the last line: Reporting Bugs.    (line  31)
+* Portability, N command on the last line: Reporting Bugs.    (line  30)
 * POSIXLY_CORRECT behavior, bracket expressions: Regular Expressions.
                                                               (line 105)
 * POSIXLY_CORRECT behavior, enabling:    Invoking sed.        (line  84)
 * POSIXLY_CORRECT behavior, escapes:     Escapes.             (line  11)
-* POSIXLY_CORRECT behavior, N command:   Reporting Bugs.      (line  46)
+* POSIXLY_CORRECT behavior, N command:   Reporting Bugs.      (line  45)
 * Print first line from pattern space:   Other Commands.      (line 110)
+* Printing file name:                    Extended Commands.   (line  30)
 * Printing line number:                  Other Commands.      (line  62)
 * Printing text unambiguously:           Other Commands.      (line  65)
-* Quitting <1>:                          Extended Commands.   (line  36)
+* Quitting <1>:                          Extended Commands.   (line  44)
 * Quitting:                              Common Commands.     (line  30)
-* Range of lines:                        Addresses.           (line  65)
-* Range with start address of zero:      Addresses.           (line  78)
+* Range of lines:                        Addresses.           (line  67)
+* Range with start address of zero:      Addresses.           (line  80)
 * Read next input line:                  Common Commands.     (line  44)
-* Read text from a file <1>:             Extended Commands.   (line  53)
+* Read text from a file <1>:             Extended Commands.   (line  61)
 * Read text from a file:                 Other Commands.      (line  78)
-* Reformat pattern space:                Extended Commands.   (line  26)
-* Reformatting paragraphs:               Extended Commands.   (line  26)
+* Reformat pattern space:                Extended Commands.   (line  34)
+* Reformatting paragraphs:               Extended Commands.   (line  34)
 * Replace hold space with copy of pattern space: Other Commands.
                                                               (line 113)
 * Replace pattern space with copy of hold space: Other Commands.
                                                               (line 121)
 * Replacing all text matching regexp in a line: The "s" Command.
-                                                              (line  51)
+                                                              (line  69)
 * Replacing only Nth match of regexp in a line: The "s" Command.
-                                                              (line  55)
+                                                              (line  73)
 * Replacing selected lines with other text: Other Commands.   (line  52)
-* Requiring GNU sed:                     Extended Commands.   (line  69)
+* Requiring GNU sed:                     Extended Commands.   (line  77)
 * Script structure:                      sed Programs.        (line   6)
 * Script, from a file:                   Invoking sed.        (line  46)
 * Script, from command line:             Invoking sed.        (line  41)
 * sed program structure:                 sed Programs.        (line   6)
 * Selecting lines to process:            Addresses.           (line   6)
-* Selecting non-matching lines:          Addresses.           (line 101)
-* Several lines, selecting:              Addresses.           (line  65)
+* Selecting non-matching lines:          Addresses.           (line 103)
+* Several lines, selecting:              Addresses.           (line  67)
 * Slash character, in regular expressions: Addresses.         (line  41)
 * Spaces, pattern and hold:              Execution Cycle.     (line   6)
-* Special addressing forms:              Addresses.           (line  78)
-* Standard input, processing as input:   Invoking sed.        (line 143)
+* Special addressing forms:              Addresses.           (line  80)
+* Standard input, processing as input:   Invoking sed.        (line 150)
 * Stream editor:                         Introduction.        (line   6)
 * Subprocesses <1>:                      Extended Commands.   (line  12)
-* Subprocesses:                          The "s" Command.     (line  85)
-* Substitution of text, options:         The "s" Command.     (line  47)
+* Subprocesses:                          The "s" Command.     (line 103)
+* Substitution of text, options:         The "s" Command.     (line  65)
 * Text, appending:                       Other Commands.      (line  27)
 * Text, deleting:                        Common Commands.     (line  36)
 * Text, insertion:                       Other Commands.      (line  46)
 * Text, printing:                        Common Commands.     (line  39)
-* Text, printing after substitution:     The "s" Command.     (line  65)
+* Text, printing after substitution:     The "s" Command.     (line  83)
 * Text, writing to a file after substitution: The "s" Command.
-                                                              (line  78)
+                                                              (line  96)
 * Transliteration:                       Other Commands.      (line  14)
 * Unbuffered I/O, choosing:              Invoking sed.        (line 131)
 * Usage summary, printing:               Invoking sed.        (line  28)
 * Version, printing:                     Invoking sed.        (line  24)
 * Working on separate files:             Invoking sed.        (line 121)
-* Write first line to a file:            Extended Commands.   (line  80)
+* Write first line to a file:            Extended Commands.   (line  88)
 * Write to a file:                       Other Commands.      (line  88)
-* Zero, as range start address:          Addresses.           (line  78)
+* Zero, as range start address:          Addresses.           (line  80)
 
 
 File: sed.info,  Node: Command and Option Index,  Prev: Concept Index,  Up: Top
@@ -2453,11 +2500,15 @@ options.
 * --help:                                Invoking sed.        (line  28)
 * --in-place:                            Invoking sed.        (line  51)
 * --line-length:                         Invoking sed.        (line  76)
+* --null-data:                           Invoking sed.        (line 139)
+* --posix:                               Invoking sed.        (line  81)
 * --quiet:                               Invoking sed.        (line  34)
 * --regexp-extended:                     Invoking sed.        (line 113)
+* --separate:                            Invoking sed.        (line 121)
 * --silent:                              Invoking sed.        (line  34)
 * --unbuffered:                          Invoking sed.        (line 131)
 * --version:                             Invoking sed.        (line  24)
+* --zero-terminated:                     Invoking sed.        (line 139)
 * -b:                                    Invoking sed.        (line  93)
 * -e:                                    Invoking sed.        (line  41)
 * -f:                                    Invoking sed.        (line  46)
@@ -2466,7 +2517,9 @@ options.
 * -n:                                    Invoking sed.        (line  34)
 * -n, forcing from within a script:      Common Commands.     (line  20)
 * -r:                                    Invoking sed.        (line 113)
+* -s:                                    Invoking sed.        (line 121)
 * -u:                                    Invoking sed.        (line 131)
+* -z:                                    Invoking sed.        (line 139)
 * : (label) command:                     Programming Commands.
                                                               (line  14)
 * = (print line number) command:         Other Commands.      (line  62)
@@ -2477,31 +2530,32 @@ options.
 * D (delete first line) command:         Other Commands.      (line  99)
 * d (delete) command:                    Common Commands.     (line  36)
 * e (evaluate) command:                  Extended Commands.   (line  12)
+* F (File name) command:                 Extended Commands.   (line  30)
 * G (appending Get) command:             Other Commands.      (line 125)
 * g (get) command:                       Other Commands.      (line 121)
 * H (append Hold) command:               Other Commands.      (line 117)
 * h (hold) command:                      Other Commands.      (line 113)
 * i (insert text lines) command:         Other Commands.      (line  46)
-* L (fLow paragraphs) command:           Extended Commands.   (line  26)
+* L (fLow paragraphs) command:           Extended Commands.   (line  34)
 * l (list unambiguously) command:        Other Commands.      (line  65)
 * N (append Next line) command:          Other Commands.      (line 105)
 * n (next-line) command:                 Common Commands.     (line  44)
 * P (print first line) command:          Other Commands.      (line 110)
 * p (print) command:                     Common Commands.     (line  39)
 * q (quit) command:                      Common Commands.     (line  30)
-* Q (silent Quit) command:               Extended Commands.   (line  36)
+* Q (silent Quit) command:               Extended Commands.   (line  44)
 * r (read file) command:                 Other Commands.      (line  78)
-* R (read line) command:                 Extended Commands.   (line  53)
-* s command, option flags:               The "s" Command.     (line  47)
-* T (test and branch if failed) command: Extended Commands.   (line  63)
+* R (read line) command:                 Extended Commands.   (line  61)
+* s command, option flags:               The "s" Command.     (line  65)
+* T (test and branch if failed) command: Extended Commands.   (line  71)
 * t (test and branch if successful) command: Programming Commands.
                                                               (line  22)
-* v (version) command:                   Extended Commands.   (line  69)
+* v (version) command:                   Extended Commands.   (line  77)
 * w (write file) command:                Other Commands.      (line  88)
-* W (write first line) command:          Extended Commands.   (line  80)
+* W (write first line) command:          Extended Commands.   (line  88)
 * x (eXchange) command:                  Other Commands.      (line 129)
 * y (transliterate) command:             Other Commands.      (line  14)
-* z (Zap) command:                       Extended Commands.   (line  85)
+* z (Zap) command:                       Extended Commands.   (line  93)
 * {} command grouping:                   Common Commands.     (line  50)
 
 
@@ -2510,49 +2564,49 @@ Tag Table:
 Node: Top944
 Node: Introduction3867
 Node: Invoking sed4421
-Ref: Invoking sed-Footnote-110512
-Ref: Invoking sed-Footnote-210704
-Node: sed Programs10803
-Node: Execution Cycle11951
-Ref: Execution Cycle-Footnote-113129
-Node: Addresses13430
-Node: Regular Expressions18174
-Node: Common Commands26082
-Node: The "s" Command28085
-Ref: The "s" Command-Footnote-132422
-Node: Other Commands32494
-Ref: Other Commands-Footnote-137636
-Node: Programming Commands37708
-Node: Extended Commands38622
-Node: Escapes42630
-Ref: Escapes-Footnote-145641
-Node: Examples45832
-Node: Centering lines46928
-Node: Increment a number47820
-Ref: Increment a number-Footnote-149380
-Node: Rename files to lower case49500
-Node: Print bash environment52203
-Node: Reverse chars of lines52958
-Ref: Reverse chars of lines-Footnote-153959
-Node: tac54176
-Node: cat -n54943
-Node: cat -b56765
-Node: wc -c57512
-Ref: wc -c-Footnote-159420
-Node: wc -w59489
-Node: wc -l60953
-Node: head61197
-Node: tail61528
-Node: uniq63209
-Node: uniq -d63997
-Node: uniq -u64708
-Node: cat -s65419
-Node: Limitations67270
-Node: Other Resources68111
-Node: Reporting Bugs68956
-Ref: Reporting Bugs-Footnote-176092
-Node: Extended regexps76163
-Node: Concept Index77349
-Node: Command and Option Index92298
+Ref: Invoking sed-Footnote-110793
+Ref: Invoking sed-Footnote-210985
+Node: sed Programs11084
+Node: Execution Cycle12617
+Ref: Execution Cycle-Footnote-113794
+Node: Addresses14095
+Node: Regular Expressions18996
+Node: Common Commands26905
+Node: The "s" Command28908
+Ref: The "s" Command-Footnote-134229
+Node: Other Commands34301
+Ref: Other Commands-Footnote-139501
+Node: Programming Commands39573
+Node: Extended Commands40487
+Node: Escapes44752
+Ref: Escapes-Footnote-147763
+Node: Examples47954
+Node: Centering lines49050
+Node: Increment a number49942
+Ref: Increment a number-Footnote-151419
+Node: Rename files to lower case51539
+Node: Print bash environment54312
+Node: Reverse chars of lines55067
+Ref: Reverse chars of lines-Footnote-156068
+Node: tac56285
+Node: cat -n57052
+Node: cat -b58874
+Node: wc -c59621
+Ref: wc -c-Footnote-161529
+Node: wc -w61598
+Node: wc -l63062
+Node: head63306
+Node: tail63637
+Node: uniq65318
+Node: uniq -d66106
+Node: uniq -u66817
+Node: cat -s67528
+Node: Limitations69379
+Node: Other Resources70220
+Node: Reporting Bugs71065
+Ref: Reporting Bugs-Footnote-178131
+Node: Extended regexps78202
+Node: Concept Index79517
+Node: Command and Option Index94612
 
 End Tag Table

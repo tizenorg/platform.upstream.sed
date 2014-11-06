@@ -1,281 +1,307 @@
-# Mensajes en espaÒol para GNU sed.
-# Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+# Mensajes en espa√±ol para GNU sed.
+# Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
 # This file is distributed under the same license as the sed package.
-# Cristian OthÛn MartÌnez Vera <cfuga@itam.mx>, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008.
+# Cristian Oth√≥n Mart√≠nez Vera <cfuga@cfuga.mx>, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: sed 4.2.0\n"
+"Project-Id-Version: sed 4.2.1\n"
 "Report-Msgid-Bugs-To: bug-gnu-utils@gnu.org\n"
-"POT-Creation-Date: 2009-06-27 15:08+0200\n"
-"PO-Revision-Date: 2008-01-18 21:10-0600\n"
-"Last-Translator: Cristian OthÛn MartÌnez Vera <cfuga@itam.mx>\n"
+"POT-Creation-Date: 2012-12-22 14:36+0100\n"
+"PO-Revision-Date: 2011-08-24 12:28-0500\n"
+"Last-Translator: Cristian Oth√≥n Mart√≠nez Vera <cfuga@cfuga.mx>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: sed/compile.c:161
+#: sed/compile.c:144
 msgid "multiple `!'s"
-msgstr "`!'s m˙ltiples"
+msgstr "`!'s m√∫ltiples"
 
-#: sed/compile.c:162
+#: sed/compile.c:145
 msgid "unexpected `,'"
 msgstr "`,' inesperada"
 
-#: sed/compile.c:163
+#: sed/compile.c:146
 msgid "invalid usage of +N or ~N as first address"
-msgstr "uso inv·lido de +N o ~N como primera direcciÛn"
+msgstr "uso inv√°lido de +N o ~N como primera direcci√≥n"
 
-#: sed/compile.c:164
+#: sed/compile.c:147
 msgid "unmatched `{'"
 msgstr "`{' sin pareja"
 
-#: sed/compile.c:165
+#: sed/compile.c:148
 msgid "unexpected `}'"
 msgstr "`}' inesperado"
 
-#: sed/compile.c:166
+#: sed/compile.c:149
 msgid "extra characters after command"
-msgstr "caracteres extra despuÈs de la orden"
+msgstr "caracteres extra despu√©s de la orden"
 
-#: sed/compile.c:167
+#: sed/compile.c:150
 msgid "expected \\ after `a', `c' or `i'"
-msgstr "se esperaba \\ despuÈs de `a', `c' Û `i'"
+msgstr "se esperaba \\ despu√©s de `a', `c' √≥ `i'"
 
-#: sed/compile.c:168
+#: sed/compile.c:151
 msgid "`}' doesn't want any addresses"
-msgstr "`}' no acepta ninguna direcciÛn"
+msgstr "`}' no acepta ninguna direcci√≥n"
 
-#: sed/compile.c:169
+#: sed/compile.c:152
 msgid ": doesn't want any addresses"
-msgstr ": no acepta ninguna direcciÛn"
+msgstr ": no acepta ninguna direcci√≥n"
 
-#: sed/compile.c:170
+#: sed/compile.c:153
 msgid "comments don't accept any addresses"
-msgstr "los comentarios no aceptan ninguna direcciÛn"
+msgstr "los comentarios no aceptan ninguna direcci√≥n"
 
-#: sed/compile.c:171
+#: sed/compile.c:154
 msgid "missing command"
 msgstr "orden faltante"
 
-#: sed/compile.c:172
+#: sed/compile.c:155
 msgid "command only uses one address"
-msgstr "la orden solamente usa una direcciÛn"
+msgstr "la orden solamente usa una direcci√≥n"
 
-#: sed/compile.c:173
+#: sed/compile.c:156
 msgid "unterminated address regex"
-msgstr "direcciÛn de expresiÛn regular sin terminar"
+msgstr "direcci√≥n de expresi√≥n regular sin terminar"
 
-#: sed/compile.c:174
+#: sed/compile.c:157
 msgid "unterminated `s' command"
 msgstr "orden `s' sin terminar"
 
-#: sed/compile.c:175
+#: sed/compile.c:158
 msgid "unterminated `y' command"
 msgstr "orden `y' sin terminar"
 
-#: sed/compile.c:176
+#: sed/compile.c:159
 msgid "unknown option to `s'"
-msgstr "opciÛn desconocida para `s'"
+msgstr "opci√≥n desconocida para `s'"
 
-#: sed/compile.c:177
+#: sed/compile.c:160
 msgid "multiple `p' options to `s' command"
-msgstr "m˙ltiples opciones `p' para la orden `s'"
+msgstr "m√∫ltiples opciones `p' para la orden `s'"
 
-#: sed/compile.c:178
+#: sed/compile.c:161
 msgid "multiple `g' options to `s' command"
-msgstr "m˙ltiples opciones `g' para la orden `s'"
+msgstr "m√∫ltiples opciones `g' para la orden `s'"
 
-#: sed/compile.c:179
+#: sed/compile.c:162
 msgid "multiple number options to `s' command"
-msgstr "m˙ltiples opciones numÈricas para la orden `s'"
+msgstr "m√∫ltiples opciones num√©ricas para la orden `s'"
 
-#: sed/compile.c:180
+#: sed/compile.c:163
 msgid "number option to `s' command may not be zero"
-msgstr "una opciÛn numÈrica para la orden `s' no puede ser cero"
+msgstr "una opci√≥n num√©rica para la orden `s' no puede ser cero"
 
-#: sed/compile.c:181
+#: sed/compile.c:164
 msgid "strings for `y' command are different lengths"
 msgstr "las cadenas para la orden `y' son de longitudes diferentes"
 
-#: sed/compile.c:182
+#: sed/compile.c:165
 msgid "delimiter character is not a single-byte character"
-msgstr "el car·cter delimitador no es un car·cter de un solo byte"
+msgstr "el car√°cter delimitador no es un car√°cter de un solo byte"
 
-#: sed/compile.c:183
+#: sed/compile.c:166
 msgid "expected newer version of sed"
-msgstr "se esperaba una versiÛn m·s reciente de sed"
+msgstr "se esperaba una versi√≥n m√°s reciente de sed"
 
-#: sed/compile.c:184
+#: sed/compile.c:167
 msgid "invalid usage of line address 0"
-msgstr "uso inv·lido de la direcciÛn de lÌnea 0"
+msgstr "uso inv√°lido de la direcci√≥n de l√≠nea 0"
 
-#: sed/compile.c:185
+#: sed/compile.c:168
 #, c-format
 msgid "unknown command: `%c'"
 msgstr "orden desconocida: `%c'"
 
-#: sed/compile.c:208
+#: sed/compile.c:169
+#, fuzzy
+msgid "incomplete command"
+msgstr "orden faltante"
+
+#: sed/compile.c:192
 #, c-format
 msgid "%s: file %s line %lu: %s\n"
-msgstr "%s: fichero %s lÌnea %lu: %s\n"
+msgstr "%s: fichero %s l√≠nea %lu: %s\n"
 
-#: sed/compile.c:211
+#: sed/compile.c:195
 #, c-format
 msgid "%s: -e expression #%lu, char %lu: %s\n"
-msgstr "%s: -e expresiÛn #%lu, car·cter %lu: %s\n"
+msgstr "%s: -e expresi√≥n #%lu, car√°cter %lu: %s\n"
 
-#: sed/compile.c:1665
+#: sed/compile.c:1657
 #, c-format
 msgid "can't find label for jump to `%s'"
 msgstr "no se puede encontrar la etiqueta para saltar a `%s'"
 
-#: sed/execute.c:709
+#: sed/execute.c:595
 #, c-format
 msgid "%s: can't read %s: %s\n"
 msgstr "%s: no se puede leer %s: %s\n"
 
-#: sed/execute.c:740
+#: sed/execute.c:624
 #, c-format
 msgid "couldn't edit %s: is a terminal"
 msgstr "no se puede editar %s: es una terminal"
 
-#: sed/execute.c:745
+#: sed/execute.c:629
 #, c-format
 msgid "couldn't edit %s: not a regular file"
 msgstr "no se puede editar %s: no es un fichero regular"
 
-#: sed/execute.c:757
+#: sed/execute.c:640
 #, c-format
 msgid "%s: warning: failed to set default file creation context to %s: %s"
 msgstr ""
+"%s: aviso: fall√≥ al establecer el contexto de creaci√≥n de fichero por "
+"omisi√≥n a %s: %s"
 
-#: sed/execute.c:764
+#: sed/execute.c:647
 #, c-format
 msgid "%s: warning: failed to get security context of %s: %s"
-msgstr ""
+msgstr "%s: aviso: fall√≥ al obtener el contexto de seguridad de %s: %s"
 
-#: sed/execute.c:783 sed/utils.c:227
+#: sed/execute.c:664 sed/utils.c:211
 #, c-format
 msgid "couldn't open temporary file %s: %s"
 msgstr "no se puede abrir el fichero temporal %s: %s"
 
-#: sed/execute.c:1317 sed/execute.c:1497
+#: sed/execute.c:1193 sed/execute.c:1373
 msgid "error in subprocess"
 msgstr "error en el subproceso"
 
-#: sed/execute.c:1319
+#: sed/execute.c:1195
 msgid "option `e' not supported"
-msgstr "no hay soporte para la opciÛn `e'"
+msgstr "no hay soporte para la opci√≥n `e'"
 
-#: sed/execute.c:1499
+#: sed/execute.c:1375
 msgid "`e' command not supported"
 msgstr "no hay soporte para la orden `e'"
 
-#: sed/execute.c:1843
+#: sed/execute.c:1725
 msgid "no input files"
 msgstr "no hay ficheros de entrada"
 
-#: sed/regexp.c:41
+#: sed/regexp.c:39
 msgid "no previous regular expression"
-msgstr "no hay una expresiÛn regular previa"
+msgstr "no hay una expresi√≥n regular previa"
 
-#: sed/regexp.c:42
+#: sed/regexp.c:40
 msgid "cannot specify modifiers on empty regexp"
-msgstr "no se pueden especificar modificadores en expresiones regulares vacÌas"
+msgstr "no se pueden especificar modificadores en expresiones regulares vac√≠as"
 
-#: sed/regexp.c:131
+#: sed/regexp.c:129
 #, c-format
 msgid "invalid reference \\%d on `s' command's RHS"
-msgstr "referencia \\%d inv·lida en el lado derecho de la orden `s'"
+msgstr "referencia \\%d inv√°lida en el lado derecho de la orden `s'"
 
-#: sed/sed.c:97
+#: sed/sed.c:32
+msgid "Jay Fenlason"
+msgstr ""
+
+#: sed/sed.c:33
+msgid "Tom Lord"
+msgstr ""
+
+#: sed/sed.c:34
+msgid "Ken Pizzini"
+msgstr ""
+
+#: sed/sed.c:35
+msgid "Paolo Bonzini"
+msgstr ""
+
+#: sed/sed.c:79
 #, c-format
 msgid ""
 "GNU sed home page: <http://www.gnu.org/software/sed/>.\n"
 "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
 msgstr ""
+"P√°gina web de sed de GNU: <http://www.gnu.org/software/sed/>.\n"
+"Ayuda general para usar software GNU: <http://www.gnu.org/gethelp/>.\n"
 
-#: sed/sed.c:104
-#, fuzzy, c-format
+#: sed/sed.c:86
+#, c-format
 msgid ""
 "E-mail bug reports to: <%s>.\n"
 "Be sure to include the word ``%s'' somewhere in the ``Subject:'' field.\n"
 msgstr ""
-"EnvÌe reportes de bichos por e-mail a: %s .\n"
-"Aseg˙rese de incluir la palabra ``%s'' en alg˙n lugar en el campo "
+"Env√≠e reportes de bichos por e-mail a: <%s>.\n"
+"Aseg√∫rese de incluir la palabra ``%s'' en alg√∫n lugar en el campo "
 "``Subject:''.\n"
 
-#: sed/sed.c:117
+#: sed/sed.c:99
 msgid ""
 "  -R, --regexp-perl\n"
 "                 use Perl 5's regular expressions syntax in the script.\n"
 msgstr ""
 "  -R, --regexp-perl\n"
 "                 utiliza la sintaxis de expresiones regulares de Perl 5\n"
-"                 en el guiÛn.\n"
+"                 en el gui√≥n.\n"
 
-#: sed/sed.c:122
+#: sed/sed.c:104
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n"
 "\n"
 msgstr ""
-"Uso: %s [OPCI”N]... {guiÛn-sÛlo-si-no-hay-otro-guiÛn} [fichero-entrada]...\n"
+"Uso: %s [OPCI√ìN]... {gui√≥n-s√≥lo-si-no-hay-otro-gui√≥n} [fichero-entrada]...\n"
 "\n"
 
-#: sed/sed.c:126
+#: sed/sed.c:108
 #, c-format
 msgid ""
 "  -n, --quiet, --silent\n"
 "                 suppress automatic printing of pattern space\n"
 msgstr ""
 "  -n, --quiet, --silent\n"
-"                 suprime la muestra autom·tica del espacio de patrones\n"
+"                 suprime la muestra autom√°tica del espacio de patrones\n"
 
-#: sed/sed.c:128
+#: sed/sed.c:110
 #, c-format
 msgid ""
 "  -e script, --expression=script\n"
 "                 add the script to the commands to be executed\n"
 msgstr ""
-"  -e guiÛn, --expression=guiÛn\n"
-"                 agrega el guiÛn a la lista de Ûrdenes para ejecutar\n"
+"  -e gui√≥n, --expression=gui√≥n\n"
+"                 agrega el gui√≥n a la lista de √≥rdenes para ejecutar\n"
 
-#: sed/sed.c:130
+#: sed/sed.c:112
 #, c-format
 msgid ""
 "  -f script-file, --file=script-file\n"
 "                 add the contents of script-file to the commands to be "
 "executed\n"
 msgstr ""
-"  -f fichero-guiÛn, --file=fichero-guiÛn\n"
-"                 agrega el contenido del fichero guiÛn a la lista de "
-"Ûrdenes\n"
+"  -f fichero-gui√≥n, --file=fichero-gui√≥n\n"
+"                 agrega el contenido del fichero gui√≥n a la lista de "
+"√≥rdenes\n"
 "                 para ejecutar\n"
 
-#: sed/sed.c:133
+#: sed/sed.c:115
 #, c-format
 msgid ""
 "  --follow-symlinks\n"
 "                 follow symlinks when processing in place\n"
 msgstr ""
 "  --follow-symlinks\n"
-"                 sigue los enlaces simbÛlicos al procesar en el lugar\n"
+"                 sigue los enlaces simb√≥licos al procesar en el lugar\n"
 
-#: sed/sed.c:136
-#, c-format
+#: sed/sed.c:118
+#, fuzzy, c-format
 msgid ""
 "  -i[SUFFIX], --in-place[=SUFFIX]\n"
-"                 edit files in place (makes backup if extension supplied)\n"
+"                 edit files in place (makes backup if SUFFIX supplied)\n"
 msgstr ""
 "  -i[SUFIJO], --in-place[=SUFIJO]\n"
 "                 edita ficheros en el lugar (crea un respaldo si se da\n"
-"                 una extensiÛn)\n"
+"                 una extensi√≥n)\n"
 
-#: sed/sed.c:139
+#: sed/sed.c:121
 #, c-format
 msgid ""
 "  -b, --binary\n"
@@ -286,17 +312,17 @@ msgstr ""
 "                 abre ficheros en modo binario (los RC+FLs no se procesan\n"
 "                 especialmente)\n"
 
-#: sed/sed.c:142
+#: sed/sed.c:124
 #, c-format
 msgid ""
 "  -l N, --line-length=N\n"
 "                 specify the desired line-wrap length for the `l' command\n"
 msgstr ""
 "  -l N, --line-length=N\n"
-"                 especifica la longitud de corte de lÌnea deseado para\n"
+"                 especifica la longitud de corte de l√≠nea deseado para\n"
 "                 la orden `l'\n"
 
-#: sed/sed.c:144
+#: sed/sed.c:126
 #, c-format
 msgid ""
 "  --posix\n"
@@ -305,16 +331,16 @@ msgstr ""
 "  --posix\n"
 "                 desactiva todas las extensiones de GNU.\n"
 
-#: sed/sed.c:146
+#: sed/sed.c:128
 #, c-format
 msgid ""
 "  -r, --regexp-extended\n"
 "                 use extended regular expressions in the script.\n"
 msgstr ""
 "  -r, --regexp-extended\n"
-"                 utiliza expresiones regulares extendidas en el guiÛn.\n"
+"                 utiliza expresiones regulares extendidas en el gui√≥n.\n"
 
-#: sed/sed.c:151
+#: sed/sed.c:133
 #, c-format
 msgid ""
 "  -s, --separate\n"
@@ -326,7 +352,7 @@ msgstr ""
 "                 considera los ficheros como separados en lugar de un solo\n"
 "                 flujo, largo y continuo.\n"
 
-#: sed/sed.c:154
+#: sed/sed.c:136
 #, c-format
 msgid ""
 "  -u, --unbuffered\n"
@@ -335,22 +361,29 @@ msgid ""
 "                 the output buffers more often\n"
 msgstr ""
 "  -u, --unbuffered\n"
-"                 carga cantidades mÌnimas de datos de los ficheros de "
+"                 carga cantidades m√≠nimas de datos de los ficheros de "
 "entrada\n"
-"                 y vacÌa los almacenamientos temporales de salida con m·s\n"
+"                 y vac√≠a los almacenamientos temporales de salida con m√°s\n"
 "                 frecuencia\n"
 
-#: sed/sed.c:157
+#: sed/sed.c:139
+#, c-format
+msgid ""
+"  -z, --null-data\n"
+"                 separate lines by NUL characters\n"
+msgstr ""
+
+#: sed/sed.c:141
 #, c-format
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     muestra esta ayuda y termina\n"
 
-#: sed/sed.c:158
+#: sed/sed.c:142
 #, c-format
 msgid "      --version  output version information and exit\n"
-msgstr "      --version  muestra la informaciÛn de la versiÛn y termina\n"
+msgstr "      --version  muestra la informaci√≥n de la versi√≥n y termina\n"
 
-#: sed/sed.c:159
+#: sed/sed.c:143
 #, c-format
 msgid ""
 "\n"
@@ -361,170 +394,166 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Si no se proporciona una opciÛn -e, --expression, -f, Û --file option,\n"
-"entonces se toma el primer argumento que no sea opciÛn como el guiÛn sed\n"
+"Si no se proporciona una opci√≥n -e, --expression, -f, √≥ --file option,\n"
+"entonces se toma el primer argumento que no sea opci√≥n como el gui√≥n sed\n"
 "a interpretar.  Todos los argumentos restantes son nombres de ficheros\n"
 "de entrada; si no se especifican ficheros de entrada, entonces se lee\n"
-"la entrada est·ndard.\n"
+"la entrada est√°ndard.\n"
 "\n"
 
-#: sed/sed.c:315
-#, c-format
-msgid "super-sed version %s\n"
-msgstr "super-sed versiÛn %s\n"
-
-#: sed/sed.c:316
-#, c-format
-msgid ""
-"based on GNU sed version %s\n"
-"\n"
-msgstr ""
-"basado en GNU sed versiÛn %s\n"
-"\n"
-
-#: sed/sed.c:318
-#, c-format
-msgid "GNU sed version %s\n"
-msgstr "GNU sed versiÛn %s\n"
-
-#: sed/sed.c:320
-#, fuzzy, c-format
-msgid ""
-"Copyright (C) %d Free Software Foundation, Inc.\n"
-"This is free software; see the source for copying conditions.  There is NO\n"
-"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE,\n"
-"to the extent permitted by law.\n"
-msgstr ""
-"%s\n"
-"Esto es software libre; vea el cÛdigo fuente para las condiciones de copia.\n"
-"No hay NINGUNA garantÌa; ni siquiera de COMERCIABILIDAD o IDONEIDAD PARA UN\n"
-"FIN DETERMINADO, en la extensiÛn permitida por ley.\n"
-
-#: sed/utils.c:93 sed/utils.c:438
+#: sed/utils.c:74 sed/utils.c:432
 #, c-format
 msgid "cannot remove %s: %s"
 msgstr "no se puede eliminar %s: %s"
 
-#: sed/utils.c:163
+#: sed/utils.c:144
 #, c-format
 msgid "couldn't open file %s: %s"
 msgstr "no se puede abrir el fichero %s: %s"
 
-#  FIXME: verificar con el cÛdigo fuente para saber si es 'conectar' o
+#  FIXME: verificar con el c√≥digo fuente para saber si es 'conectar' o
 #         'adjuntar'. cfuga
-#: sed/utils.c:186
+#: sed/utils.c:167
 #, c-format
 msgid "couldn't attach to %s: %s"
 msgstr "no se puede conectar a %s: %s"
 
-#: sed/utils.c:245
+#: sed/utils.c:229
 #, c-format
 msgid "couldn't write %d item to %s: %s"
 msgid_plural "couldn't write %d items to %s: %s"
 msgstr[0] "no se puede escribir %d elemento a %s: %s"
 msgstr[1] "no se pueden escribir %d elementos a %s: %s"
 
-#: sed/utils.c:260 sed/utils.c:276
+#: sed/utils.c:244 sed/utils.c:267
 #, c-format
 msgid "read error on %s: %s"
 msgstr "error al leer de %s: %s"
 
-#: sed/utils.c:378
+#: sed/utils.c:372
 #, c-format
 msgid "couldn't follow symlink %s: %s"
-msgstr "no se puede seguir el enlace simbÛlico %s: %s"
+msgstr "no se puede seguir el enlace simb√≥lico %s: %s"
 
-#: sed/utils.c:412
+#: sed/utils.c:406
 #, c-format
 msgid "cannot stat %s: %s"
-msgstr "no se puede obtener la informaciÛn de stat de %s: %s"
+msgstr "no se puede obtener la informaci√≥n de stat de %s: %s"
 
-#: sed/utils.c:443
+#: sed/utils.c:437
 #, c-format
 msgid "cannot rename %s: %s"
 msgstr "no se puede renombrar %s: %s"
 
-#: lib/regcomp.c:134
+#: lib/regcomp.c:132
 msgid "Success"
-msgstr "…xito"
+msgstr "√âxito"
 
-#: lib/regcomp.c:137
+#: lib/regcomp.c:135
 msgid "No match"
 msgstr "No hay coincidencia"
 
-#: lib/regcomp.c:140
+#: lib/regcomp.c:138
 msgid "Invalid regular expression"
-msgstr "Expresion regular inv·lida"
+msgstr "Expresion regular inv√°lida"
 
-#: lib/regcomp.c:143
+#: lib/regcomp.c:141
 msgid "Invalid collation character"
-msgstr "Car·cter de ordenamiento inv·lido"
+msgstr "Car√°cter de ordenamiento inv√°lido"
 
-#: lib/regcomp.c:146
+#: lib/regcomp.c:144
 msgid "Invalid character class name"
-msgstr "Car·cter de nombre de clase inv·lido"
+msgstr "Car√°cter de nombre de clase inv√°lido"
 
-#: lib/regcomp.c:149
+#: lib/regcomp.c:147
 msgid "Trailing backslash"
 msgstr "Diagonal invertida al final"
 
-#: lib/regcomp.c:152
+#: lib/regcomp.c:150
 msgid "Invalid back reference"
-msgstr "Referencia hacia atr·s inv·lida"
+msgstr "Referencia hacia atr√°s inv√°lida"
 
-#: lib/regcomp.c:155
+#: lib/regcomp.c:153
 msgid "Unmatched [ or [^"
-msgstr "[ Û [^ sin pareja"
+msgstr "[ √≥ [^ sin pareja"
 
-#: lib/regcomp.c:158
+#: lib/regcomp.c:156
 msgid "Unmatched ( or \\("
-msgstr "( Û \\( sin pareja"
+msgstr "( √≥ \\( sin pareja"
 
-#: lib/regcomp.c:161
+#: lib/regcomp.c:159
 msgid "Unmatched \\{"
 msgstr "\\{ sin pareja"
 
-#: lib/regcomp.c:164
+#: lib/regcomp.c:162
 msgid "Invalid content of \\{\\}"
-msgstr "Contenido inv·lido de \\{\\}"
+msgstr "Contenido inv√°lido de \\{\\}"
 
-#: lib/regcomp.c:167
+#: lib/regcomp.c:165
 msgid "Invalid range end"
-msgstr "Final de rango inv·lido"
+msgstr "Final de rango inv√°lido"
 
-#: lib/regcomp.c:170
+#: lib/regcomp.c:168
 msgid "Memory exhausted"
 msgstr "Memoria agotada"
 
-#: lib/regcomp.c:173
+#: lib/regcomp.c:171
 msgid "Invalid preceding regular expression"
-msgstr "ExpresiÛn regular precedente inv·lida"
+msgstr "Expresi√≥n regular precedente inv√°lida"
 
-#: lib/regcomp.c:176
+#: lib/regcomp.c:174
 msgid "Premature end of regular expression"
-msgstr "Final prematuro de la expresiÛn regular"
+msgstr "Final prematuro de la expresi√≥n regular"
 
-#: lib/regcomp.c:179
+#: lib/regcomp.c:177
 msgid "Regular expression too big"
-msgstr "ExpresiÛn regular demasiado grande"
+msgstr "Expresi√≥n regular demasiado grande"
 
-#: lib/regcomp.c:182
+#: lib/regcomp.c:180
 msgid "Unmatched ) or \\)"
-msgstr ") Û \\) sin pareja"
+msgstr ") √≥ \\) sin pareja"
 
-#: lib/regcomp.c:703
+#: lib/regcomp.c:705
 msgid "No previous regular expression"
-msgstr "No hay una expresiÛn regular previa"
+msgstr "No hay una expresi√≥n regular previa"
+
+#~ msgid "super-sed version %s\n"
+#~ msgstr "super-sed versi√≥n %s\n"
+
+#~ msgid ""
+#~ "based on GNU sed version %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "basado en GNU sed versi√≥n %s\n"
+#~ "\n"
+
+#~ msgid "GNU sed version %s\n"
+#~ msgstr "GNU sed versi√≥n %s\n"
+
+#~ msgid ""
+#~ "Copyright (C) %d Free Software Foundation, Inc.\n"
+#~ "This is free software; see the source for copying conditions.  There is "
+#~ "NO\n"
+#~ "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR "
+#~ "PURPOSE,\n"
+#~ "to the extent permitted by law.\n"
+#~ msgstr ""
+#~ "Copyright (C) %d Free Software Foundation, Inc.\n"
+#~ "Esto es software libre; vea el c√≥digo fuente para las condiciones de "
+#~ "copia.\n"
+#~ "No hay NINGUNA garant√≠a; ni siquiera de COMERCIABILIDAD o IDONEIDAD PARA "
+#~ "UN\n"
+#~ "FIN DETERMINADO, en la extensi√≥n permitida por ley.\n"
 
 # FUZZY: pushback -> empuje? cfuga
 #~ msgid "Called savchar() with unexpected pushback (%x)"
 #~ msgstr "savchar() llamado con empuje inesperado (%x)"
 
 #~ msgid "INTERNAL ERROR: bad address type"
-#~ msgstr "ERROR INTERNO: tipo de direcciÛn errÛneo"
+#~ msgstr "ERROR INTERNO: tipo de direcci√≥n err√≥neo"
 
 #~ msgid "INTERNAL ERROR: Bad cmd %c"
-#~ msgstr "ERROR INTERNO: cmd %c errÛneo"
+#~ msgstr "ERROR INTERNO: cmd %c err√≥neo"
 
 #~ msgid ""
 #~ "Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n"
@@ -561,53 +590,53 @@ msgstr "No hay una expresiÛn regular previa"
 #~ "specified, then the standard input is read.\n"
 #~ "\n"
 #~ msgstr ""
-#~ "Modo de empleo: %s [OPCI”N]... {guiÛn-sÛlo-si-no-hay-otro-guiÛn} [fichero-"
+#~ "Modo de empleo: %s [OPCI√ìN]... {gui√≥n-s√≥lo-si-no-hay-otro-gui√≥n} [fichero-"
 #~ "entrada]...\n"
 #~ "\n"
 #~ "  -n, --quiet, --silent\n"
-#~ "                 elimina la impresiÛn autom·tica del espacio de patrones\n"
-#~ "  -e script, --expression=guiÛn\n"
-#~ "                 agrega el guiÛn a las Ûrdenes a ser ejecutadas\n"
-#~ "  -f script-file, --file=fichero-guiÛn\n"
-#~ "                 agrega el contenido del fichero-guiÛn a las Ûrdenes a "
+#~ "                 elimina la impresi√≥n autom√°tica del espacio de patrones\n"
+#~ "  -e script, --expression=gui√≥n\n"
+#~ "                 agrega el gui√≥n a las √≥rdenes a ser ejecutadas\n"
+#~ "  -f script-file, --file=fichero-gui√≥n\n"
+#~ "                 agrega el contenido del fichero-gui√≥n a las √≥rdenes a "
 #~ "ser\n"
 #~ "                  ejecutadas\n"
 #~ "  -i[sufijo, --in-place[=sufijo]\n"
 #~ "                 edita los archivos en su lugar (crea respaldos si se\n"
-#~ "                 proporciona una extensiÛn)\n"
+#~ "                 proporciona una extensi√≥n)\n"
 #~ "  -l N, --line-length=N\n"
-#~ "                 especifica la longitud deseada para el corte de la lÌnea "
+#~ "                 especifica la longitud deseada para el corte de la l√≠nea "
 #~ "para\n"
 #~ "                 la orden `l'\n"
 #~ "  -r, --regexp-extended\n"
-#~ "                 usa expresiones regulares extendidas en el guiÛn.\n"
+#~ "                 usa expresiones regulares extendidas en el gui√≥n.\n"
 #~ "%s  -s, --separate\n"
 #~ "                 considera los ficheros por separado en lugar de un solo "
 #~ "flujo\n"
 #~ "                 largo y continuo.\n"
 #~ "  -u, --unbuffered\n"
-#~ "                 carga cantidades mÌnimas de datos de los ficheros de "
+#~ "                 carga cantidades m√≠nimas de datos de los ficheros de "
 #~ "entrada\n"
-#~ "                 y vacÌa con m·s frecuencia los almacenamientos "
+#~ "                 y vac√≠a con m√°s frecuencia los almacenamientos "
 #~ "temporales de\n"
 #~ "                 salida\n"
 #~ "      --help     muestra esta ayuda y sale\n"
-#~ "  -V, --version  muestra la informaciÛn de la versiÛn y sale\n"
+#~ "  -V, --version  muestra la informaci√≥n de la versi√≥n y sale\n"
 #~ "\n"
 #~ "Si no se dan las opciones -e, --expression, -f o --file, entonces se "
 #~ "toma\n"
-#~ "el primer argumento que no sea opciÛn como el guiÛn sed a interpretar.  "
+#~ "el primer argumento que no sea opci√≥n como el gui√≥n sed a interpretar.  "
 #~ "Todos\n"
 #~ "los argumentos restantes son nombres de ficheros de entrada; si no se\n"
 #~ "especifican nombres de fichero de entrada, entonces se lee la entrada "
-#~ "est·ndard.\n"
+#~ "est√°ndard.\n"
 #~ "\n"
 
 #~ msgid "Unexpected End-of-file"
 #~ msgstr "Fin de fichero inesperado"
 
 #~ msgid "bad regexp: %s\n"
-#~ msgstr "expresiÛn regular errÛnea: %s\n"
+#~ msgstr "expresi√≥n regular err√≥nea: %s\n"
 
 #~ msgid "input read error: %s"
 #~ msgstr "error al leer la entrada: %s"

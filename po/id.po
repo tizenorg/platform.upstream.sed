@@ -9,198 +9,220 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sed 4.2.0\n"
 "Report-Msgid-Bugs-To: bug-gnu-utils@gnu.org\n"
-"POT-Creation-Date: 2009-06-27 15:08+0200\n"
+"POT-Creation-Date: 2012-12-22 14:36+0100\n"
 "PO-Revision-Date: 2008-11-09 20:15+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: sed/compile.c:161
+#: sed/compile.c:144
 msgid "multiple `!'s"
 msgstr "multiple `!'"
 
-#: sed/compile.c:162
+#: sed/compile.c:145
 msgid "unexpected `,'"
 msgstr "tidak diduga `,'"
 
-#: sed/compile.c:163
+#: sed/compile.c:146
 msgid "invalid usage of +N or ~N as first address"
 msgstr "penggunaan tidak valid dari +N atau ~N sebagai alamat pertama"
 
-#: sed/compile.c:164
+#: sed/compile.c:147
 msgid "unmatched `{'"
 msgstr "tidak cocok `{'"
 
-#: sed/compile.c:165
+#: sed/compile.c:148
 msgid "unexpected `}'"
 msgstr "tidak diduga `}'"
 
-#: sed/compile.c:166
+#: sed/compile.c:149
 msgid "extra characters after command"
 msgstr "karakter tambahan setelah perintah"
 
-#: sed/compile.c:167
+#: sed/compile.c:150
 msgid "expected \\ after `a', `c' or `i'"
 msgstr "diharapkan \\ setelah `a', `c' atau `i'"
 
-#: sed/compile.c:168
+#: sed/compile.c:151
 msgid "`}' doesn't want any addresses"
 msgstr "`}' tidak menginginkan alamat apapun"
 
-#: sed/compile.c:169
+#: sed/compile.c:152
 msgid ": doesn't want any addresses"
 msgstr ": tidak menginginkan alamat apapun"
 
-#: sed/compile.c:170
+#: sed/compile.c:153
 msgid "comments don't accept any addresses"
 msgstr "komentar tidak menerima alamat apapun"
 
-#: sed/compile.c:171
+#: sed/compile.c:154
 msgid "missing command"
 msgstr "perintah hilang"
 
-#: sed/compile.c:172
+#: sed/compile.c:155
 msgid "command only uses one address"
 msgstr "perintah hanya menggunakan satu alamat"
 
-#: sed/compile.c:173
+#: sed/compile.c:156
 msgid "unterminated address regex"
 msgstr "alamat regex yang tidak selesai"
 
-#: sed/compile.c:174
+#: sed/compile.c:157
 msgid "unterminated `s' command"
 msgstr "perintah `s' tidak selesai"
 
-#: sed/compile.c:175
+#: sed/compile.c:158
 msgid "unterminated `y' command"
 msgstr "perintah `y' tidak selesai"
 
-#: sed/compile.c:176
+#: sed/compile.c:159
 msgid "unknown option to `s'"
 msgstr "opsi `s' tidak diketahui"
 
-#: sed/compile.c:177
+#: sed/compile.c:160
 msgid "multiple `p' options to `s' command"
 msgstr "multiple opsi `p' untuk perintah `s'"
 
-#: sed/compile.c:178
+#: sed/compile.c:161
 msgid "multiple `g' options to `s' command"
 msgstr "multiple opsi `g' untuk perintah `s'"
 
-#: sed/compile.c:179
+#: sed/compile.c:162
 msgid "multiple number options to `s' command"
 msgstr "multiple jumlah opsi untuk perintah `s'"
 
-#: sed/compile.c:180
+#: sed/compile.c:163
 msgid "number option to `s' command may not be zero"
 msgstr "jumlah opsi untuk perintah `s' tidak boleh nol"
 
-#: sed/compile.c:181
+#: sed/compile.c:164
 msgid "strings for `y' command are different lengths"
 msgstr "string untuk perintah `y' memiliki panjang berbeda"
 
-#: sed/compile.c:182
+#: sed/compile.c:165
 msgid "delimiter character is not a single-byte character"
 msgstr "karakter pembatas bukan sebuah karakter byte-tunggal"
 
-#: sed/compile.c:183
+#: sed/compile.c:166
 msgid "expected newer version of sed"
 msgstr "diduga versi baru sed"
 
-#: sed/compile.c:184
+#: sed/compile.c:167
 msgid "invalid usage of line address 0"
 msgstr "penggunaan tidak dari baris alamat 0"
 
-#: sed/compile.c:185
+#: sed/compile.c:168
 #, c-format
 msgid "unknown command: `%c'"
 msgstr "perintah: `%c' tidak dikenal"
 
-#: sed/compile.c:208
+#: sed/compile.c:169
+#, fuzzy
+msgid "incomplete command"
+msgstr "perintah hilang"
+
+#: sed/compile.c:192
 #, c-format
 msgid "%s: file %s line %lu: %s\n"
 msgstr "%s: berkas %s baris %lu: %s\n"
 
-#: sed/compile.c:211
+#: sed/compile.c:195
 #, c-format
 msgid "%s: -e expression #%lu, char %lu: %s\n"
 msgstr "%s: -e ekspresi #%lu, char %lu: %s\n"
 
-#: sed/compile.c:1665
+#: sed/compile.c:1657
 #, c-format
 msgid "can't find label for jump to `%s'"
 msgstr "Tidak dapat menemukan label untuk melompat ke `%s'"
 
-#: sed/execute.c:709
+#: sed/execute.c:595
 #, c-format
 msgid "%s: can't read %s: %s\n"
 msgstr "%s: tidak dapat membaca %s: %s\n"
 
-#: sed/execute.c:740
+#: sed/execute.c:624
 #, c-format
 msgid "couldn't edit %s: is a terminal"
 msgstr "tidak dapat mengubah %s: adalah sebuah terminal"
 
-#: sed/execute.c:745
+#: sed/execute.c:629
 #, c-format
 msgid "couldn't edit %s: not a regular file"
 msgstr "tidak dapat mengubah %s: bukan berkas regular"
 
-#: sed/execute.c:757
+#: sed/execute.c:640
 #, c-format
 msgid "%s: warning: failed to set default file creation context to %s: %s"
 msgstr ""
 
-#: sed/execute.c:764
+#: sed/execute.c:647
 #, c-format
 msgid "%s: warning: failed to get security context of %s: %s"
 msgstr ""
 
-#: sed/execute.c:783 sed/utils.c:227
+#: sed/execute.c:664 sed/utils.c:211
 #, c-format
 msgid "couldn't open temporary file %s: %s"
 msgstr "Tidak dapat membuka berkas sementara %s: %s"
 
-#: sed/execute.c:1317 sed/execute.c:1497
+#: sed/execute.c:1193 sed/execute.c:1373
 msgid "error in subprocess"
 msgstr "kesalahan dalam subproses"
 
-#: sed/execute.c:1319
+#: sed/execute.c:1195
 msgid "option `e' not supported"
 msgstr "optsi `e' tidak didukung"
 
-#: sed/execute.c:1499
+#: sed/execute.c:1375
 msgid "`e' command not supported"
 msgstr "perintah `e' tidak didukung"
 
-#: sed/execute.c:1843
+#: sed/execute.c:1725
 msgid "no input files"
 msgstr "tidak ada berkas masukan"
 
-#: sed/regexp.c:41
+#: sed/regexp.c:39
 msgid "no previous regular expression"
 msgstr "Tidak ada reguler ekspresi sebelumnya"
 
-#: sed/regexp.c:42
+#: sed/regexp.c:40
 msgid "cannot specify modifiers on empty regexp"
 msgstr "Tidak dapat menspesifikasikan pemodifikasi pada regexp kosong"
 
-#: sed/regexp.c:131
+#: sed/regexp.c:129
 #, c-format
 msgid "invalid reference \\%d on `s' command's RHS"
 msgstr "referensi tidak valid \\%d pada perintah `s' RHS"
 
-#: sed/sed.c:97
+#: sed/sed.c:32
+msgid "Jay Fenlason"
+msgstr ""
+
+#: sed/sed.c:33
+msgid "Tom Lord"
+msgstr ""
+
+#: sed/sed.c:34
+msgid "Ken Pizzini"
+msgstr ""
+
+#: sed/sed.c:35
+msgid "Paolo Bonzini"
+msgstr ""
+
+#: sed/sed.c:79
 #, c-format
 msgid ""
 "GNU sed home page: <http://www.gnu.org/software/sed/>.\n"
 "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
 msgstr ""
 
-#: sed/sed.c:104
+#: sed/sed.c:86
 #, fuzzy, c-format
 msgid ""
 "E-mail bug reports to: <%s>.\n"
@@ -209,7 +231,7 @@ msgstr ""
 "Laporkan bug ke email: %s \n"
 "Pastikan untuk menyertakan kata \"%s\" di field \"Subject:\".\n"
 
-#: sed/sed.c:117
+#: sed/sed.c:99
 msgid ""
 "  -R, --regexp-perl\n"
 "                 use Perl 5's regular expressions syntax in the script.\n"
@@ -217,7 +239,7 @@ msgstr ""
 "  -R, --regexp-perl\n"
 "                 gunakan sintaks reguler ekspresi Perl 5 dalam skrip.\n"
 
-#: sed/sed.c:122
+#: sed/sed.c:104
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n"
@@ -227,7 +249,7 @@ msgstr ""
 "masukan]...\n"
 "\n"
 
-#: sed/sed.c:126
+#: sed/sed.c:108
 #, c-format
 msgid ""
 "  -n, --quiet, --silent\n"
@@ -236,7 +258,7 @@ msgstr ""
 "  -n, --quiet, --silent\n"
 "                 tekan penampilan otomatis dari pola ruang\n"
 
-#: sed/sed.c:128
+#: sed/sed.c:110
 #, c-format
 msgid ""
 "  -e script, --expression=script\n"
@@ -245,7 +267,7 @@ msgstr ""
 "  -e script, --expression=script\n"
 "                 tambahkan script ke perintah untuk dijalankan\n"
 
-#: sed/sed.c:130
+#: sed/sed.c:112
 #, c-format
 msgid ""
 "  -f script-file, --file=script-file\n"
@@ -256,7 +278,7 @@ msgstr ""
 "                 tambahkan isi dari berkas-script ke perintah yang akan "
 "dijalankan\n"
 
-#: sed/sed.c:133
+#: sed/sed.c:115
 #, c-format
 msgid ""
 "  --follow-symlinks\n"
@@ -265,17 +287,17 @@ msgstr ""
 "  --follow-symlinks\n"
 "                 ikuti symlinks ketika pemrosesan di tempat\n"
 
-#: sed/sed.c:136
-#, c-format
+#: sed/sed.c:118
+#, fuzzy, c-format
 msgid ""
 "  -i[SUFFIX], --in-place[=SUFFIX]\n"
-"                 edit files in place (makes backup if extension supplied)\n"
+"                 edit files in place (makes backup if SUFFIX supplied)\n"
 msgstr ""
 "  -i[AKHIRAN], --in-place[=AKHIRAN]\n"
 "                 ubah berkas di tempat (buat backup jika ekstensi "
 "diberikan)\n"
 
-#: sed/sed.c:139
+#: sed/sed.c:121
 #, c-format
 msgid ""
 "  -b, --binary\n"
@@ -286,7 +308,7 @@ msgstr ""
 "                 buka berkas dalam mode binari (CR+LF tidak diproses secara "
 "spesial)\n"
 
-#: sed/sed.c:142
+#: sed/sed.c:124
 #, c-format
 msgid ""
 "  -l N, --line-length=N\n"
@@ -296,7 +318,7 @@ msgstr ""
 "                 spesifikasikan panjang line-wrap yang diinginkan untuk "
 "perintah `l'\n"
 
-#: sed/sed.c:144
+#: sed/sed.c:126
 #, c-format
 msgid ""
 "  --posix\n"
@@ -305,7 +327,7 @@ msgstr ""
 "  --posix\n"
 "                 non-aktifkan seluruh ekstensi GNU.\n"
 
-#: sed/sed.c:146
+#: sed/sed.c:128
 #, c-format
 msgid ""
 "  -r, --regexp-extended\n"
@@ -314,7 +336,7 @@ msgstr ""
 "  -r, --regexp-extended\n"
 "                 gunakan ekspresi ekstensi regular dalam skrip.\n"
 
-#: sed/sed.c:151
+#: sed/sed.c:133
 #, c-format
 msgid ""
 "  -s, --separate\n"
@@ -327,7 +349,7 @@ msgstr ""
 "sebuah\n"
 "                 stream tunggal panjang berkelanjutan.\n"
 
-#: sed/sed.c:154
+#: sed/sed.c:136
 #, c-format
 msgid ""
 "  -u, --unbuffered\n"
@@ -340,17 +362,24 @@ msgstr ""
 "flush\n"
 "                 buffer keluaran lebih sering\n"
 
-#: sed/sed.c:157
+#: sed/sed.c:139
+#, c-format
+msgid ""
+"  -z, --null-data\n"
+"                 separate lines by NUL characters\n"
+msgstr ""
+
+#: sed/sed.c:141
 #, c-format
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     tampilkan pesan bantuan dan keluar\n"
 
-#: sed/sed.c:158
+#: sed/sed.c:142
 #, c-format
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  keluarkan informasi versi dan keluar\n"
 
-#: sed/sed.c:159
+#: sed/sed.c:143
 #, c-format
 msgid ""
 "\n"
@@ -368,151 +397,146 @@ msgstr ""
 "berkas masukan yang dispesifikasikan, maka standar masukan yang dibaca.\n"
 "\n"
 
-#: sed/sed.c:315
-#, c-format
-msgid "super-sed version %s\n"
-msgstr "super-sed versi %s\n"
-
-#: sed/sed.c:316
-#, c-format
-msgid ""
-"based on GNU sed version %s\n"
-"\n"
-msgstr ""
-"berdasarkan pada GNU sed versi %s\n"
-"\n"
-
-#: sed/sed.c:318
-#, c-format
-msgid "GNU sed version %s\n"
-msgstr "GNU sed versi %s\n"
-
-#: sed/sed.c:320
-#, fuzzy, c-format
-msgid ""
-"Copyright (C) %d Free Software Foundation, Inc.\n"
-"This is free software; see the source for copying conditions.  There is NO\n"
-"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE,\n"
-"to the extent permitted by law.\n"
-msgstr ""
-"%s\n"
-"Ini adalah aplikasi bebas; lihat kode program untuk persyaratan penyalinan.\n"
-"TIDAK ADA garansi disini; bahkan untuk DIPERDAGANGKAN atau KECOCOKAN UNTUK "
-"TUJUAN TERTENTU,\n"
-"sejauh diijinkan oleh hukum yang berlaku.\n"
-
-#: sed/utils.c:93 sed/utils.c:438
+#: sed/utils.c:74 sed/utils.c:432
 #, c-format
 msgid "cannot remove %s: %s"
 msgstr "tidak dapat menghapus %s: %s"
 
-#: sed/utils.c:163
+#: sed/utils.c:144
 #, c-format
 msgid "couldn't open file %s: %s"
 msgstr "tidak dapat membuka berkas %s: %s"
 
-#: sed/utils.c:186
+#: sed/utils.c:167
 #, c-format
 msgid "couldn't attach to %s: %s"
 msgstr "tidak dapat meng-attach ke %s: %s"
 
-#: sed/utils.c:245
+#: sed/utils.c:229
 #, c-format
 msgid "couldn't write %d item to %s: %s"
 msgid_plural "couldn't write %d items to %s: %s"
 msgstr[0] "tidak dapat menulis %d item ke %s: %s"
 
-#: sed/utils.c:260 sed/utils.c:276
+#: sed/utils.c:244 sed/utils.c:267
 #, c-format
 msgid "read error on %s: %s"
 msgstr "kesalahan pembacaan pada %s: %s"
 
-#: sed/utils.c:378
+#: sed/utils.c:372
 #, c-format
 msgid "couldn't follow symlink %s: %s"
 msgstr "tidak dapat mengikuti symlink %s: %s"
 
-#: sed/utils.c:412
+#: sed/utils.c:406
 #, c-format
 msgid "cannot stat %s: %s"
 msgstr "tidak dapat memperoleh statistik %s: %s"
 
-#: sed/utils.c:443
+#: sed/utils.c:437
 #, c-format
 msgid "cannot rename %s: %s"
 msgstr "tidak dapat mengubah nama %s: %s"
 
-#: lib/regcomp.c:134
+#: lib/regcomp.c:132
 msgid "Success"
 msgstr "Sukses"
 
-#: lib/regcomp.c:137
+#: lib/regcomp.c:135
 msgid "No match"
 msgstr "Tidak cocok"
 
-#: lib/regcomp.c:140
+#: lib/regcomp.c:138
 msgid "Invalid regular expression"
 msgstr "Reguler ekspresi tidak valid"
 
-#: lib/regcomp.c:143
+#: lib/regcomp.c:141
 msgid "Invalid collation character"
 msgstr "Karakter kolasi tidak valid"
 
-#: lib/regcomp.c:146
+#: lib/regcomp.c:144
 msgid "Invalid character class name"
 msgstr "Nama kelas karakter tidak valid"
 
-#: lib/regcomp.c:149
+#: lib/regcomp.c:147
 msgid "Trailing backslash"
 msgstr "Trailing backslash"
 
-#: lib/regcomp.c:152
+#: lib/regcomp.c:150
 msgid "Invalid back reference"
 msgstr "Referensi balik tidak valid"
 
-#: lib/regcomp.c:155
+#: lib/regcomp.c:153
 msgid "Unmatched [ or [^"
 msgstr "[ atau [^ tidak sesuai"
 
-#: lib/regcomp.c:158
+#: lib/regcomp.c:156
 msgid "Unmatched ( or \\("
 msgstr "( atau \\( tidak sesuai"
 
-#: lib/regcomp.c:161
+#: lib/regcomp.c:159
 msgid "Unmatched \\{"
 msgstr "\\{ tidak sesuai"
 
-#: lib/regcomp.c:164
+#: lib/regcomp.c:162
 msgid "Invalid content of \\{\\}"
 msgstr "Isi \\{\\} tidak valid"
 
-#: lib/regcomp.c:167
+#: lib/regcomp.c:165
 msgid "Invalid range end"
 msgstr "Batas akhir tidak valid"
 
-#: lib/regcomp.c:170
+#: lib/regcomp.c:168
 msgid "Memory exhausted"
 msgstr "Kehabisan memori"
 
-#: lib/regcomp.c:173
+#: lib/regcomp.c:171
 msgid "Invalid preceding regular expression"
 msgstr "Reguler ekspresi yang mengawali tidak valid"
 
-#: lib/regcomp.c:176
+#: lib/regcomp.c:174
 msgid "Premature end of regular expression"
 msgstr "Reguler ekspresi berakhir prematur"
 
-#: lib/regcomp.c:179
+#: lib/regcomp.c:177
 msgid "Regular expression too big"
 msgstr "Reguler ekspresi terlalu besar"
 
-#: lib/regcomp.c:182
+#: lib/regcomp.c:180
 msgid "Unmatched ) or \\)"
 msgstr ") atau \\) tidak sesuai"
 
-#: lib/regcomp.c:703
+#: lib/regcomp.c:705
 msgid "No previous regular expression"
 msgstr "Tidak ada reguler ekspresi sebelumnya"
+
+#~ msgid "super-sed version %s\n"
+#~ msgstr "super-sed versi %s\n"
+
+#~ msgid ""
+#~ "based on GNU sed version %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "berdasarkan pada GNU sed versi %s\n"
+#~ "\n"
+
+#~ msgid "GNU sed version %s\n"
+#~ msgstr "GNU sed versi %s\n"
+
+#~ msgid ""
+#~ "%s\n"
+#~ "This is free software; see the source for copying conditions.  There is "
+#~ "NO\n"
+#~ "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR "
+#~ "PURPOSE,\n"
+#~ "to the extent permitted by law.\n"
+#~ msgstr ""
+#~ "%s\n"
+#~ "Ini adalah aplikasi bebas; lihat kode program untuk persyaratan "
+#~ "penyalinan.\n"
+#~ "TIDAK ADA garansi disini; bahkan untuk DIPERDAGANGKAN atau KECOCOKAN "
+#~ "UNTUK TUJUAN TERTENTU,\n"
+#~ "sejauh diijinkan oleh hukum yang berlaku.\n"
 
 #~ msgid "Called savchar() with unexpected pushback (%x)"
 #~ msgstr "Dipanggil savchar() dengan pushback (%x) yang tidak diharapkan"

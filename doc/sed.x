@@ -99,25 +99,6 @@ if
 .I label
 is omitted, branch to end of script.
 .TP
-.RI t\  label
-If a s/// has done a successful substitution since the
-last input line was read and since the last t or T
-command, then branch to
-.IR label ;
-if
-.I label
-is omitted, branch to end of script.
-.TP
-.RI T\  label
-If no s/// has done a successful substitution since the
-last input line was read and since the last t or T
-command, then branch to
-.IR label ;
-if
-.I label
-is omitted, branch to end of script.  This is a GNU
-extension.
-.TP
 c \e
 .TP
 .I text
@@ -130,18 +111,16 @@ Delete pattern space.
 Start next cycle.
 .TP
 D
-Delete up to the first embedded newline in the pattern space.
-Start next cycle, but skip reading from the input
-if there is still data in the pattern space.
+If pattern space contains no newline, start a normal new cycle as if
+the d command was issued.  Otherwise, delete text in the pattern
+space up to the first newline, and restart cycle with the resultant
+pattern space, without reading a new line of input.
 .TP
 h H
 Copy/append pattern space to hold space.
 .TP
 g G
 Copy/append hold space to pattern space.
-.TP
-x
-Exchange the contents of the hold and pattern spaces.
 .TP
 l
 List out the current line in a ``visually unambiguous'' form.
@@ -177,6 +156,25 @@ and the special escapes \e1 through \e9 to refer to the
 corresponding matching sub-expressions in the
 .IR regexp .
 .TP
+.RI t\  label
+If a s/// has done a successful substitution since the
+last input line was read and since the last t or T
+command, then branch to
+.IR label ;
+if
+.I label
+is omitted, branch to end of script.
+.TP
+.RI T\  label
+If no s/// has done a successful substitution since the
+last input line was read and since the last t or T
+command, then branch to
+.IR label ;
+if
+.I label
+is omitted, branch to end of script.  This is a GNU
+extension.
+.TP
 .RI w\  filename
 Write the current pattern space to
 .IR filename .
@@ -185,6 +183,9 @@ Write the current pattern space to
 Write the first line of the current pattern space to
 .IR filename .
 This is a GNU extension.
+.TP
+x
+Exchange the contents of the hold and pattern spaces.
 .TP
 .RI y/ source / dest /
 Transliterate the characters in the pattern space which appear in
@@ -232,7 +233,10 @@ The following address types are supported:
 .TP
 .I number
 Match only the specified line
-.IR number .
+.IR number
+(which increments cumulatively across files, unless the
+.B -s
+option is specified on the command line).
 .TP
 .IR first ~ step
 Match every
@@ -324,7 +328,6 @@ http://sed.sf.net/grabbag/.
 [BUGS]
 .PP
 E-mail bug reports to
-.BR bonzini@gnu.org .
-Be sure to include the word ``sed'' somewhere in the ``Subject:'' field.
+.BR bug-sed@gnu.org .
 Also, please include the output of ``sed --version'' in the body
 of your report if at all possible.

@@ -1,26 +1,47 @@
 dnl Process this file with -*- autoconf -*- to produce a configure script.
-AC_INIT(sed, 4.2.1, bug-gnu-utils@gnu.org, sed)
+AC_INIT([GNU sed], 4.2.2, bug-sed@gnu.org, sed)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([sed/sed.c])
 AM_CONFIG_HEADER(config.h:config_h.in)
 AC_PREREQ(2.60)
 AM_INIT_AUTOMAKE
 
-SED_FEATURE_VERSION=4.2
+SED_FEATURE_VERSION=4.2.2
 AC_DEFINE_UNQUOTED(SED_FEATURE_VERSION, "$SED_FEATURE_VERSION",
   [Define to the version of GNU sed whose features are supported by this sed.])
 AC_SUBST(SED_FEATURE_VERSION)
 
-COPYRIGHT_YEAR=2009
-AC_DEFINE_UNQUOTED(COPYRIGHT_YEAR, $COPYRIGHT_YEAR,
-  [Define to the copyright year printed by --version.])
+COPYRIGHT_YEAR=2012
 AC_SUBST(COPYRIGHT_YEAR)
 
 AC_PROG_CC
 gl_EARLY
 gl_INIT
 gl_DISABLE_THREADS
-AC_SYS_LONG_FILE_NAMES
+AC_CACHE_CHECK([whether "rt" can be used with fopen], [sed_cv_fopen_rt], [
+AC_TRY_RUN([
+#include <stdio.h>
+#include <errno.h>
+
+int main()
+{
+  FILE *fp;
+  int result;
+  errno = 0;
+  fp = fopen ("conftest.c", "rt");
+  if (fp) fclose (fp);
+  return fp ? 0 : 1;
+}], [sed_cv_fopen_rt=yes],
+    [sed_cv_fopen_rt=no],
+    [case $host in
+       *cygwin* | *mingw*) sed_cv_fopen_rt=yes ;;
+       *) sed_cv_fopen_rt='assuming no' ;;
+     esac])])
+if test "$sed_cv_fopen_rt" = yes; then
+  AC_DEFINE([HAVE_FOPEN_RT], [1],
+            [Defined if "rt" can be used as a mode to fopen.])
+fi
+
 AC_CACHE_CHECK([whether -lcP is needed], [sed_cv_libcp_needed], [
 AC_TRY_RUN([
 #include <stdio.h>
@@ -44,28 +65,27 @@ if test "$sed_cv_libcp_needed" = yes; then
   LIBS="-lcP $LIBS"
 fi
 
-AC_HEADER_DIRENT
-AC_CHECK_HEADERS_ONCE(io.h limits.h locale.h stdarg.h alloca.h stddef.h
-		      errno.h wchar.h wctype.h sys/file.h mcheck.h, [], [],
-		 [AC_INCLUDES_DEFAULT])
+AC_CHECK_HEADERS_ONCE(locale.h errno.h wchar.h wctype.h mcheck.h,
+		      [], [], [AC_INCLUDES_DEFAULT])
 AC_C_CONST
 AC_TYPE_SIZE_T
-AC_CHECK_TYPE(ssize_t, int)
 
-AC_FUNC_VPRINTF
-
-AC_DEFUN([AM_MKINSTALLDIRS], [MKINSTALLDIRS="$mkdir_p" AC_SUBST(MKINSTALLDIRS)])
-AM_GNU_GETTEXT_VERSION(0.15)
+AM_GNU_GETTEXT_VERSION(0.17)
 AM_GNU_GETTEXT([external])
 
-AC_CHECK_FUNCS_ONCE(isatty bcopy bzero isascii memcpy memset strchr strtoul
+AC_CHECK_FUNCS_ONCE(isatty isascii memcpy strchr strtoul lstat readlink
 		    popen pathconf fchown fchmod setlocale)
+
+# Check whether we are able to follow symlinks
+if test "$ac_cv_func_lstat:$ac_cv_func_readlink" = yes:yes; then
+   AC_DEFINE(ENABLE_FOLLOW_SYMLINKS, ,[Follow symlinks when processing in place])
+fi
 
 AC_ARG_ENABLE(i18n,
 [  --disable-i18n          disable internationalization (default=enabled)], ,
 enable_i18n=yes)
 if test "x$enable_i18n" = xno; then
-  ac_cv_func_wcscoll=false
+  ac_cv_func_wcscoll=no
 fi
 
 AC_ARG_ENABLE(regex-tests, 
@@ -81,15 +101,8 @@ if test "x$enable_regex_tests" = xyes; then
     [Include BSD functions in regex, used by the testsuite])
 fi
 
-# Check whether we are able to follow symlinks
-AC_CHECK_FUNC(lstat, have_lstat=yes)
-AC_CHECK_FUNC(readlink, have_readlink=yes)
-if test "x$have_lstat" = xyes -a "x$have_readlink" = xyes; then
-   AC_DEFINE(ENABLE_FOLLOW_SYMLINKS, ,[Follow symlinks when processing in place])
-fi
-
 # Determine whether we should run UTF-8 tests by checking if cyrillic
-# letters are case-folded properly.  The test for UTF-8 locales (bot
+# letters are case-folded properly.  The test for UTF-8 locales (both
 # in general and specifically for a Russian one) is a bit weak, but it
 # should match exactly what is done in the testsuite.  In fact, sed's
 # logic is portable (though testing it requires care) so it is enough to
@@ -168,7 +181,6 @@ case $host in
 esac
 AC_SUBST([XFAIL_TESTS])
 
-AC_CONFIG_FILES([bootstrap.sh], chmod +x bootstrap.sh)
 AC_CONFIG_FILES([testsuite/version.good:testsuite/version.gin])
 AC_CONFIG_FILES([Makefile doc/Makefile \
 lib/Makefile sed/Makefile testsuite/Makefile \

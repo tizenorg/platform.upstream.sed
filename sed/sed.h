@@ -16,17 +16,11 @@
     along with this program; if not, write to the Free Software
     Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
 #include "basicdefs.h"
 #include "regex.h"
-
-#ifndef BOOTSTRAP
 #include <stdio.h>
 #include "unlocked-io.h"
-#endif
 
 #include "utils.h"
 
@@ -187,32 +181,36 @@ struct sed_cmd {
 
 
 
-void bad_prog P_((const char *why));
-size_t normalize_text P_((char *text, size_t len, enum text_types buftype));
-struct vector *compile_string P_((struct vector *, char *str, size_t len));
-struct vector *compile_file P_((struct vector *, const char *cmdfile));
-void check_final_program P_((struct vector *));
-void rewind_read_files P_((void));
-void finish_program P_((struct vector *));
+void bad_prog (const char *why);
+size_t normalize_text (char *text, size_t len, enum text_types buftype);
+struct vector *compile_string (struct vector *, char *str, size_t len);
+struct vector *compile_file (struct vector *, const char *cmdfile);
+void check_final_program (struct vector *);
+void rewind_read_files (void);
+void finish_program (struct vector *);
 
-struct regex *compile_regex P_((struct buffer *b, int flags, int needed_sub));
-int match_regex P_((struct regex *regex,
-		    char *buf, size_t buflen, size_t buf_start_offset,
-		    struct re_registers *regarray, int regsize));
+struct regex *compile_regex (struct buffer *b, int flags, int needed_sub);
+int match_regex (struct regex *regex,
+		 char *buf, size_t buflen, size_t buf_start_offset,
+		 struct re_registers *regarray, int regsize);
 #ifdef DEBUG_LEAKS
-void release_regex P_((struct regex *));
+void release_regex (struct regex *);
 #endif
 
-int process_files P_((struct vector *, char **argv));
+int process_files (struct vector *, char **argv);
 
-int main P_((int, char **));
+int main (int, char **);
 
-extern void fmt P_ ((const char *line, const char *line_end, int max_length, FILE *output_file));
+extern void fmt (const char *line, const char *line_end, int max_length, FILE *output_file);
 
 extern int extended_regexp_flags;
 
-/* If set, fflush(stdout) on every line output. */
-extern bool unbuffered_output;
+/* one-byte buffer delimiter */
+extern char buffer_delimiter;
+
+/* If set, fflush(stdout) on every line output,
+   and turn off stream buffering on inputs.  */
+extern bool unbuffered;
 
 /* If set, don't write out the line unless explicitly told to. */
 extern bool no_default_output;
@@ -232,8 +230,9 @@ extern countT lcmd_out_line_len;
 /* How do we edit files in-place? (we don't if NULL) */
 extern char *in_place_extension;
 
-/* The mode to use to read files, either "rt" or "rb".  */
+/* The mode to use to read and write files, either "rt"/"w" or "rb"/"wb".  */
 extern char *read_mode;
+extern char *write_mode;
 
 /* Should we use EREs? */
 extern bool use_extended_syntax_p;
@@ -242,8 +241,6 @@ extern bool use_extended_syntax_p;
 extern int mb_cur_max;
 extern bool is_utf8;
 
-#ifdef HAVE_MBRTOWC
-#ifdef HAVE_BTOWC
 #define MBRTOWC(pwc, s, n, ps) \
   (mb_cur_max == 1 ? \
    (*(pwc) = btowc (*(unsigned char *) (s)), 1) : \
@@ -253,13 +250,6 @@ extern bool is_utf8;
   (mb_cur_max == 1 ? \
    (*(s) = wctob ((wint_t) (wc)), 1) : \
    wcrtomb ((s), (wc), (ps)))
-#else
-#define MBRTOWC(pwc, s, n, ps) \
-  mbrtowc ((pwc), (s), (n), (ps))
-
-#define WCRTOMB(s, wc, ps) \
-  wcrtomb ((s), (wc), (ps))
-#endif
 
 #define MBSINIT(s) \
   (mb_cur_max == 1 ? 1 : mbsinit ((s)))
@@ -270,12 +260,6 @@ extern bool is_utf8;
 #define BRLEN(ch, ps) \
   (mb_cur_max == 1 ? 1 : brlen (ch, ps))
 
-#else
-#define MBSINIT(s) 1
-#define MBRLEN(s, n, ps) 1
-#define BRLEN(ch, ps) 1
-#endif
-
-extern int brlen P_ ((int ch, mbstate_t *ps));
-extern void initialize_mbcs P_ ((void));
+extern int brlen (int ch, mbstate_t *ps);
+extern void initialize_mbcs (void);
 

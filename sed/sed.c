@@ -1,5 +1,5 @@
 /*  GNU SED, a batch stream editor.
-    Copyright (C) 1989,90,91,92,93,94,95,98,99,2002,2003,2006,2008,2009
+    Copyright (C) 1989,90,91,92,93,94,95,98,99,2002,2003,2006,2008,2009,2010
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -21,47 +21,28 @@
 
 
 #include <stdio.h>
-#ifdef HAVE_STRINGS_H
-# include <strings.h>
-#else
-# include <string.h>
-#endif /*HAVE_STRINGS_H*/
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
-#ifndef HAVE_STRCHR
-# define strchr index
-# define strrchr rindex
-#endif
-
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-
-#ifdef HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include "getopt.h"
 
-#ifndef BOOTSTRAP
-#ifndef HAVE_STDLIB_H
- extern char *getenv P_((const char *));
-#endif
-#endif
+#include "version-etc.h"
 
-#ifndef HAVE_STRTOUL
-# define ATOI(x)	atoi(x)
-#else
-# define ATOI(x)	strtoul(x, NULL, 0)
-#endif
+#define AUTHORS \
+   _("Jay Fenlason"), \
+   _("Tom Lord"), \
+   _("Ken Pizzini"), \
+   _("Paolo Bonzini")
 
 char *program_name;
 
 int extended_regexp_flags = 0;
 
+/* one-byte buffer delimiter */
+char buffer_delimiter = '\n';
+
 /* If set, fflush(stdout) on every line output. */
-bool unbuffered_output = false;
+bool unbuffered = false;
 
 /* If set, don't write out the line unless explicitly told to */
 bool no_default_output = false;
@@ -75,8 +56,9 @@ bool follow_symlinks = false;
 /* How do we edit files in-place? (we don't if NULL) */
 char *in_place_extension = NULL;
 
-/* The mode to use to read files, either "rt" or "rb".  */
-char *read_mode = "rt";
+/* The mode to use to read/write files, either "r"/"w" or "rb"/"wb".  */
+char *read_mode = "r";
+char *write_mode = "w";
 
 /* Do we need to be pedantically POSIX compliant? */
 enum posixicity_types posixicity;
@@ -87,7 +69,7 @@ countT lcmd_out_line_len = 70;
 /* The complete compiled SED program that we are going to run: */
 static struct vector *the_program = NULL;
 
-static void usage P_((int));
+static void usage (int);
 static void
 contact(errmsg)
   int errmsg;
@@ -106,7 +88,7 @@ Be sure to include the word ``%s'' somewhere in the ``Subject:'' field.\n"),
 	  PACKAGE_BUGREPORT, PACKAGE);
 }
 
-static void usage P_((int));
+static void usage (int);
 static void
 usage(status)
   int status;
@@ -134,7 +116,7 @@ Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n\
                  follow symlinks when processing in place\n"));
 #endif
   fprintf(out, _("  -i[SUFFIX], --in-place[=SUFFIX]\n\
-                 edit files in place (makes backup if extension supplied)\n"));
+                 edit files in place (makes backup if SUFFIX supplied)\n"));
 #if defined(WIN32) || defined(_WIN32) || defined(__CYGWIN__) || defined(MSDOS) || defined(__EMX__)
   fprintf(out, _("  -b, --binary\n\
                  open files in binary mode (CR+LFs are not processed specially)\n"));
@@ -154,6 +136,8 @@ Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n\
   fprintf(out, _("  -u, --unbuffered\n\
                  load minimal amounts of data from the input files and flush\n\
                  the output buffers more often\n"));
+  fprintf(out, _("  -z, --null-data\n\
+                 separate lines by NUL characters\n"));
   fprintf(out, _("      --help     display this help and exit\n"));
   fprintf(out, _("      --version  output version information and exit\n"));
   fprintf(out, _("\n\
@@ -174,9 +158,9 @@ main(argc, argv)
   char **argv;
 {
 #ifdef REG_PERL
-#define SHORTOPTS "bsnrRuEe:f:l:i::V:"
+#define SHORTOPTS "bsnrzRuEe:f:l:i::V:"
 #else
-#define SHORTOPTS "bsnruEe:f:l:i::V:"
+#define SHORTOPTS "bsnrzuEe:f:l:i::V:"
 #endif
 
   static struct option longopts[] = {
@@ -189,6 +173,8 @@ main(argc, argv)
     {"file", 1, NULL, 'f'},
     {"in-place", 2, NULL, 'i'},
     {"line-length", 1, NULL, 'l'},
+    {"null-data", 0, NULL, 'z'},
+    {"zero-terminated", 0, NULL, 'z'},
     {"quiet", 0, NULL, 'n'},
     {"posix", 0, NULL, 'p'},
     {"silent", 0, NULL, 'n'},
@@ -232,7 +218,7 @@ main(argc, argv)
    */
   if (cols)
     {
-      countT t = ATOI(cols);
+      countT t = atoi(cols);
       if (t > 1)
 	lcmd_out_line_len = t-1;
     }
@@ -250,6 +236,10 @@ main(argc, argv)
 	  break;
 	case 'f':
 	  the_program = compile_file(the_program, optarg);
+	  break;
+
+	case 'z':
+	  buffer_delimiter = 0;
 	  break;
 
 	case 'F':
@@ -275,7 +265,7 @@ main(argc, argv)
 	  break;
 
 	case 'l':
-	  lcmd_out_line_len = ATOI(optarg);
+	  lcmd_out_line_len = atoi(optarg);
 	  break;
 
 	case 'p':
@@ -284,6 +274,7 @@ main(argc, argv)
 
         case 'b':
 	  read_mode = "rb";
+	  write_mode = "wb";
 	  break;
 
 	/* Undocumented, for compatibility with BSD sed.  */
@@ -307,24 +298,13 @@ main(argc, argv)
 	  break;
 
 	case 'u':
-	  unbuffered_output = true;
+	  unbuffered = true;
 	  break;
 
 	case 'v':
-#ifdef REG_PERL
-	  fprintf(stdout, _("super-sed version %s\n"), VERSION);
-	  fprintf(stdout, _("based on GNU sed version %s\n\n"), SED_FEATURE_VERSION);
-#else
-	  fprintf(stdout, _("GNU sed version %s\n"), VERSION);
-#endif
-	  fprintf(stdout, _("Copyright (C) %d Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE,\n\
-to the extent permitted by law.\n\
-"), COPYRIGHT_YEAR);
-	  fputc('\n', stdout);
+          version_etc(stdout, program_name, PACKAGE_NAME, VERSION,
+                      AUTHORS, (char *) NULL);
 	  contact(false);
-
 	  ck_fclose (NULL);
 	  exit (0);
 	case 'h':

@@ -1,3 +1,341 @@
+2012-12-21  Paolo Bonzini  <bonzini@gnu.org>
+
+	* configure.ac: Bump version number.  Replace COPYRIGHT_YEAR.
+	* Makefile.am (dist-hook): Revert 2010-08-10 change.
+
+2012-12-21  Paolo Bonzini  <bonzini@gnu.org>
+
+	* autoboot: Rename to bootstrap.
+	* autoboot.conf: Rename to bootstrap.conf.
+	* README.boot: Remove.
+	* Makefile.am: Remove README.boot, add bootstrap and bootstrap.conf.
+
+2012-12-21  Paolo Bonzini  <bonzini@gnu.org>
+
+	* gnulib: Update.
+	* testsuite/version.gin: Regenerate.
+
+2012-12-21  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed.texi: Regenerate.
+	* doc/sed.1: Regenerate.
+	* po/sed.pot: Regenerate.
+
+2012-07-25  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed-in.texi: Document difference between "e" and "r"
+	commands.
+
+2012-04-29  Jim Hill  <gjthill@gmail.com>
+
+	* Makefile.am (noinst_DATA, dist-hook): build failed after git
+	clean -dfx finish bootstrap.sh removal.
+
+2012-04-13  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed/compile.c (convert_number): Remove default_char argument,
+	expect buf to point to it.  Remove maxdigits argument and compute
+	it on the fly.
+	(normalize_text): Unify calls to convert_number under the convert
+	label.  For TEXT_REPLACEMENT add a backslash to the output if
+	convert_number returns ch == '&'.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* testsuite/version.gin: Regenerate.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* basicdefs.h (P_): Remove.
+	* sed/compile.c: Adjust.
+	* sed/execute.c: Likewise.
+	* sed/fmt.c: Likewise.
+	* sed/sed.c: Likewise.
+	* sed/sed.h: Likewise.
+	* sed/utils.c: Likewise.
+	* sed/utils.h: Likewise.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* basicdefs.h (FREE): Remove.
+	* sed/compile.c: Adjust.
+	* sed/execute.c: Adjust.
+	* sed/regexp.c: Adjust.
+	* sed/utils.c: Adjust, remove ck_free.
+	* sed/utils.h: Adjust, remove ck_free.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* basicdefs.h (CAST, VCAST, VOID, MEMCPY, MEMMOVE): Rip out.
+	* sed/compile.c: Adjust.
+	* sed/execute.c: Adjust.
+	* sed/regexp.c: Adjust.
+	* sed/utils.c: Adjust.
+	* sed/utils.h: Adjust.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed/execute.c: Unconditionally compile for MBCS.
+	* sed/mbcs.c: Unconditionally compile for MBCS.
+	* sed/sed.h: Unconditionally compile for MBCS.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* basicdefs.h: Enjoy gnulib's headers.
+	* sed/compile.c: Likewise.
+	* sed/execute.c: Likewise.
+	* sed/regexp.c: Likewise.
+	* sed/sed.c: Likewise.
+	* sed/sed.h: Likewise.
+	* sed/utils.c: Likewise.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* bootstrap.sh.in: Remove.
+	* bootstrap.sh: Remove.
+	* configure.ac: Do not create bootstrap.sh.
+	* basicdefs.h: Remove guards.
+	* sed/execute.c [BOOTSTRAP]: Remove guards.
+	* sed/sed.c [BOOTSTRAP]: Remove guards.
+	* sed/sed.h [BOOTSTRAP]: Remove guards.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* gnulib: Update.
+
+2012-03-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed.x: Document address behavior across input files.
+	* doc/sed.1: Regenerate.
+
+2012-02-13  Paolo Bonzini  <bonzini@gnu.org>
+
+	* configure.ac: Test whether fopen("foo", "rt") works.
+	* sed/compile.c: Do not open scripts with "rt" mode if it doesn't.
+	* sed/sed.c: Never open input files with "rt" mode.
+
+2012-02-05  Paolo Bonzini  <bonzini@gnu.org>
+            Jim Hill  <gjthill@gmail.com>
+
+	* autoboot.conf: Change getline to getdelim.
+	* doc/sed-in.texi: Document -z/--null-data.
+	* doc/sed.texi: Regenerate.
+	* doc/sed.1: Regenerate.
+	* sed/execute.c: Change '\n' to buffer_delimiter.
+	* sed/sed.c: Add support for -z/--null-data.
+	* sed/sed.h: Add buffer_delimiter.
+	* sed/utils.c: Change ck_getline to ck_getdelim.
+	* sed/utils.h: Change ck_getline to ck_getdelim.
+	* NEWS: Document new option.
+
+2011-11-23  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed-in.texi: Document how multiline mode affects matching
+	newlines against period.  Reported by Dmitry Bolshakov.
+
+2011-08-29  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed/sed.c (usage): Fix documentation for -i.  Reported by
+	Dennis Bartlett.
+
+2011-07-11  Jim Meyering  <meyering@redhat.com>
+
+	avoid silent data loss when an input line is 2^31 bytes or longer
+	If one line in a file has length (including newline) of 2^31, then
+	applying sed -i to that file truncates it to size 0.  I first
+	noticed it like this: Create a file with line of length 2^31-1
+	  $ perl -le 'print "v"x(2**31-1)' > k
+	Then prepend a byte to that line:
+	  $ sed -i 's/^/v/' k
+	Surprise!  The file is empty.
+	* sed/utils.c (ck_getline): Declare "result" to be of type ssize_t,
+	rather than int, to match the return type of getline.
+
+2011-07-14  Padraig Brady  <p@draigbrady.com>
+
+	* execute.c (open_next_file): Only reopen stdin on Windows/DOS.
+
+2011-05-27  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed-in.texi: Explain behavior of \l and \u at the end
+	of the replacement text.
+	* doc/sed.texi: Regenerate.
+	* sed/execute.c (append_replacement, do_subst): Further
+	simplification.
+
+2011-05-27  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed-in.texi: Fix incorrect comment in the "Increment a
+	number" example.  Reported by Wu Liang and Micah Cowan.
+	* doc/sed.texi: Regenerate.
+
+2011-03-11  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed/compile.c (normalize_text): Clang analyzer cleanup.
+	* sed/execute.c (append_replacement, do_subst): Same.
+	* sed/utils.c (ck_getline): Same.
+
+2010-11-13  Jari Aalto  <jari.aalto@cante.net>
+
+	* doc/sed.x: Order commands alphabetically.
+	* doc/sed.1: Regenerate.
+	* doc/sed.texi: Regenerate.
+
+2010-11-10  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/sed-in.texi: Fix double negation in comment, escape
+	file names.
+
+2010-11-03  Eric Blake  <eblake@redhat.com>
+
+	* basicdefs.h (ISDIGIT): Avoid compiler warning on cygwin.
+	* sed/compile.c (normalize_text): Avoid undefined behavior.
+
+	* sed/sed.c (includes): Supply missing header.
+
+2010-11-01  Paolo Bonzini  <bonzini@gnu.org>
+
+	* autoboot.conf: Replace gettext with gettext-h.  Suggested by
+	Gerald Pfeifer and Eric Blake.
+	* configure.ac: Downgrade minimum requested version of gettext
+	to 0.17.
+
+2010-10-31  Gerald Pfeifer  <gerald@pfeifer.com>
+
+	* doc/sed-in.texi (Extended regexps): Add '|' to the list of
+	differences.  Note that "\|" is a GNU extension to begin with.
+	* doc/sed.texi: Rebuild.
+
+2010-10-20  Paolo Bonzini  <bonzini@gnu.org>
+
+	* autoboot.conf: Add fwriting.
+	* sed/utils.c: Use it.
+
+2010-09-20  Paolo Bonzini  <bonzini@gnu.org>
+
+	* doc/configure.ac: Mention bug-sed@gnu.org.
+	* doc/sed.x: Mention bug-sed@gnu.org.
+	* doc/sed-in.texi: Mention bug-sed@gnu.org.
+
+2010-08-30  Paolo Bonzini  <bonzini@gnu.org>
+
+	* Makefile.am (dist-hook): Remove COPYRIGHT_YEAR check.
+	* autoboot.conf (gnulib_modules): Add version-etc-fsf.
+	* configure.ac (COPYRIGHT_YEAR): Remove.  Change package name to
+	"GNU sed".
+	* doc/sed.1: Regenerate.
+	* sed/sed.c (AUTHORS): New.
+	(main): Use version_etc.
+
+2010-07-18  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed.c (write_mode): New.
+	(main): Initialize it to "wb" if --binary is passed.
+	* sed.h (write_mode): New.
+	* compile.c (mark_subst_opts, compile_program): Use it instead
+	of "w".
+	* execute.c (open_next_file): Pass write_mode to ck_mkstemp.
+	* utils.c (ck_mkstemp): Accept mode, pass it to fdopen.  Constify.
+	* utils.h (ck_mkstemp): Adjust prototype.
+
+2010-08-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	Fix imprecision in the documentation of `D'.
+	* doc/sed-in.texi (D command): Fix documentation of behavior for
+	pattern space ending with \n and with no other newline.
+	Reported by Randall Cotton.
+	* doc/sed.x (D command): Fix documentation of behavior for
+	pattern space ending with \n and with no other newline.
+	* doc/sed.texi: Regenerate.
+	* doc/sed.1: Regenerate.
+
+2010-07-19  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	Let --posix turn off nonportable scripts ending in backslash.
+	* sed/compile.c (errors, INCOMPLETE_CMD): New error string.
+	(compile_program): In strict posix mode, complain about incomplete
+	command.
+	* NEWS: Update.
+	Report by Bruno Haible.
+
+2010-07-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* autoboot.conf (gnulib_modules): Replace mkstemp with mkostemp.
+	* bootstrap.sh.in: Compile mkostemp.c instead of mkstemp.c.
+	* gnulib: Update.
+	* NEWS: Mention change.
+	* sed/utils.c (ck_mkstemp): Use mkostemp to work around Cygwin
+	oddity.  Reported by Stepan Kasal.
+
+2010-05-03  Timothy Baker  <timothypaulbaker@gmail.com> (tiny change)
+
+	* doc/sed.texi (Regular expressions): Fix typo.
+
+2009-11-15  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* doc/sed.texi (Extended Commands): Document F command.
+	* doc/sed-in.texi: Regenerate.
+	* sed/compile.c (compile_program): Accept 'F' if not --posix.
+	* sed/execute.c (open_next_file): Always initialize in_file_name.
+	(execute_program): Handle 'F'.
+	* configure.ac: Bump SED_FEATURE_VERSION.
+	* NEWS: Update.
+
+2009-12-07  Clint Adams  <schizo@debian.org>  (tiny change)
+
+	* sed/execute.c (open_next_file): If is_selinux_enabled returns -1,
+	treat it as "disabled".
+
+2009-10-15  Paolo Bonzini  <bonzini@gnu.org>
+
+	* sed/execute.c (closedown): First change owner (while permissions
+	stay 0?00), then mode.
+
+2009-10-15  Paolo Bonzini  <bonzini@gnu.org>
+	    WANG Yunfeng  <uhuruh@gmail.com>
+
+	* sed/execute.c (str_append, str_append_modified): Handle incomplete
+	sequences as if they were invalid.
+
+2009-10-14  Paolo Bonzini  <bonzini@gnu.org>
+
+	* po/sed.pot: Update.
+
+2009-10-14  Paolo Bonzini  <bonzini@gnu.org>
+
+	* configure.ac: Use cache variables rather than AC_CHECK_FUNC.
+
+2009-10-14  Paolo Bonzini  <bonzini@gnu.org>
+
+	* configure.ac: Remove obselete configure tests.
+	* sed/fmt.c: Assume limits.h is always present.
+	* sed/utils.c: Assume vfprintf is always present.
+
+2009-10-14  Yuri G. Kudryashov  <urkud.urkud@gmail.com> (tiny change)
+
+	* testsuite/Makefile.tests: Override LC_ALL, not LANG.
+
+2009-10-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* doc/sed-in.texi (Invoking sed): Add index entries for --posix,
+	-s, --separate.
+	(Other Commands): Fix typo.
+	* doc/sed.texi: Regenerate.
+
+2009-09-07  Dmitry Chistikov <dd1email@gmail.com> (tiny change)
+
+	* doc/sed-in.texi: Document how to separate commands.
+	* doc/sed.texi: Regenerate.
+
+2009-08-30  Paolo Bonzini  <bonzini@gnu.org>
+
+	* autoboot.conf: Add ssize_t.
+	* configure.ac: Remove useless stuff, bump gettext requirement to 0.17.
+
+2009-08-10  Bake Timmons  <b3timmons@speedymail.org> (tiny change)
+
+	* doc/sed-in.texi: Fix typo.
+
 2009-06-27  Paolo Bonzini  <bonzini@gnu.org>
 
 	* configure.ac: Bump version.

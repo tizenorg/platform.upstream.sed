@@ -1,5 +1,5 @@
 /*  GNU SED, a batch stream editor.
-    Copyright (C) 1989,90,91,92,93,94,95,98,99,2002,2003,2004,2005,2006,2008
+    Copyright (C) 1989,90,91,92,93,94,95,98,99,2002,2003,2004,2005,2006,2008,2010
     Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
@@ -21,27 +21,9 @@
 #include "sed.h"
 #include <stdio.h>
 #include <ctype.h>
-
-#ifdef HAVE_STRINGS_H
-# include <strings.h>
-# ifdef HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-#else
-# include <string.h>
-#endif /* HAVE_STRINGS_H */
-
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
-#endif
-
-#ifdef HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
-
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <obstack.h>
 
 
@@ -155,7 +137,8 @@ static const char errors[] =
   "delimiter character is not a single-byte character\0"
   "expected newer version of sed\0"
   "invalid usage of line address 0\0"
-  "unknown command: `%c'";
+  "unknown command: `%c'\0"
+  "incomplete command";
 
 #define BAD_BANG (errors)
 #define BAD_COMMA (BAD_BANG + sizeof(N_("multiple `!'s")))
@@ -182,7 +165,8 @@ static const char errors[] =
 #define ANCIENT_VERSION (BAD_DELIM + sizeof(N_("delimiter character is not a single-byte character")))
 #define INVALID_LINE_0 (ANCIENT_VERSION + sizeof(N_("expected newer version of sed")))
 #define UNKNOWN_CMD (INVALID_LINE_0 + sizeof(N_("invalid usage of line address 0")))
-#define END_ERRORS (UNKNOWN_CMD + sizeof(N_("unknown command: `%c'")))
+#define INCOMPLETE_CMD (UNKNOWN_CMD + sizeof(N_("unknown command: `%c'")))
+#define END_ERRORS (INCOMPLETE_CMD + sizeof(N_("incomplete command")))
 
 static struct output *file_read = NULL;
 static struct output *file_write = NULL;
@@ -206,12 +190,12 @@ bad_prog(why)
 {
   if (cur_input.name)
     fprintf(stderr, _("%s: file %s line %lu: %s\n"),
-	    myname, cur_input.name, CAST(unsigned long)cur_input.line, why);
+	    myname, cur_input.name, (unsigned long)cur_input.line, why);
   else
     fprintf(stderr, _("%s: -e expression #%lu, char %lu: %s\n"),
 	    myname,
-	    CAST(unsigned long)cur_input.string_expr_count,
-	    CAST(unsigned long)(prog.cur-prog.base),
+	    (unsigned long)cur_input.string_expr_count,
+	    (unsigned long)(prog.cur-prog.base),
 	    why);
   exit(EXIT_FAILURE);
 }
@@ -220,7 +204,7 @@ bad_prog(why)
 /* Read the next character from the program.  Return EOF if there isn't
    anything to read.  Keep cur_input.line up to date, so error messages
    can be meaningful. */
-static int inchar P_((void));
+static int inchar (void);
 static int
 inchar()
 {
@@ -242,7 +226,7 @@ inchar()
 }
 
 /* unget `ch' so the next call to inchar will return it.   */
-static void savchar P_((int ch));
+static void savchar (int ch);
 static void
 savchar(ch)
   int ch;
@@ -255,14 +239,14 @@ savchar(ch)
     {
       if (prog.cur <= prog.base || *--prog.cur != ch)
 	panic("Called savchar() with unexpected pushback (%x)",
-	      CAST(unsigned char)ch);
+	      (unsigned char)ch);
     }
   else
     ungetc(ch, prog.file);
 }
 
 /* Read the next non-blank character from the program.  */
-static int in_nonblank P_((void));
+static int in_nonblank (void);
 static int
 in_nonblank()
 {
@@ -274,7 +258,7 @@ in_nonblank()
 }
 
 /* Read an integer value from the program.  */
-static countT in_integer P_((int ch));
+static countT in_integer (int ch);
 static countT
 in_integer(ch)
   int ch;
@@ -290,7 +274,7 @@ in_integer(ch)
   return num;
 }
 
-static int add_then_next P_((struct buffer *b, int ch));
+static int add_then_next (struct buffer *b, int ch);
 static int
 add_then_next(b, ch)
   struct buffer *b;
@@ -300,20 +284,19 @@ add_then_next(b, ch)
   return inchar();
 }
 
-static char * convert_number P_((char *, char *, const char *, int, int, int));
+static char * convert_number (char *, char *, const char *, int);
 static char *
-convert_number(result, buf, bufend, base, maxdigits, default_char)
+convert_number(result, buf, bufend, base)
   char *result;
   char *buf;
   const char *bufend;
   int base;
-  int maxdigits;
-  int default_char;
 {
   int n = 0;
+  int max = 1;
   char *p;
 
-  for (p=buf; p < bufend && maxdigits-- > 0; ++p)
+  for (p=buf+1; p < bufend && max <= 255; ++p, max *= base)
     {
       int d = -1;
       switch (*p)
@@ -339,8 +322,8 @@ convert_number(result, buf, bufend, base, maxdigits, default_char)
 	break;
       n = n * base + d;
     }
-  if (p == buf)
-    *result = default_char;
+  if (p == buf+1)
+    *result = *buf;
   else
     *result = n;
   return p;
@@ -348,7 +331,7 @@ convert_number(result, buf, bufend, base, maxdigits, default_char)
 
 
 /* Read in a filename for a `r', `w', or `s///w' command. */
-static struct buffer *read_filename P_((void));
+static struct buffer *read_filename (void);
 static struct buffer *
 read_filename()
 {
@@ -373,7 +356,7 @@ read_filename()
   return b;
 }
 
-static struct output *get_openfile P_((struct output **file_ptrs, const char *mode, int fail));
+static struct output *get_openfile (struct output **file_ptrs, const char *mode, int fail);
 static struct output *
 get_openfile(file_ptrs, mode, fail)
      struct output **file_ptrs;
@@ -421,7 +404,7 @@ get_openfile(file_ptrs, mode, fail)
 }
 
 
-static struct sed_cmd *next_cmd_entry P_((struct vector **vectorp));
+static struct sed_cmd *next_cmd_entry (struct vector **vectorp);
 static struct sed_cmd *
 next_cmd_entry(vectorp)
   struct vector **vectorp;
@@ -447,7 +430,7 @@ next_cmd_entry(vectorp)
   return cmd;
 }
 
-static int snarf_char_class P_((struct buffer *b, mbstate_t *cur_stat));
+static int snarf_char_class (struct buffer *b, mbstate_t *cur_stat);
 static int
 snarf_char_class(b, cur_stat)
   struct buffer *b;
@@ -528,7 +511,7 @@ snarf_char_class(b, cur_stat)
     }
 }
 
-static struct buffer *match_slash P_((int slash, int regex));
+static struct buffer *match_slash (int slash, int regex);
 static struct buffer *
 match_slash(slash, regex)
   int slash;
@@ -584,7 +567,7 @@ match_slash(slash, regex)
   return NULL;
 }
 
-static int mark_subst_opts P_((struct subst *cmd));
+static int mark_subst_opts (struct subst *cmd);
 static int
 mark_subst_opts(cmd)
   struct subst *cmd;
@@ -650,7 +633,7 @@ mark_subst_opts(cmd)
 	break;
 
       case 'w':
-	cmd->outf = get_openfile(&file_write, "w", true);
+	cmd->outf = get_openfile(&file_write, write_mode, true);
 	return flags;
 
       case '0': case '1': case '2': case '3': case '4':
@@ -684,7 +667,7 @@ mark_subst_opts(cmd)
 
 
 /* read in a label for a `:', `b', or `t' command */
-static char *read_label P_((void));
+static char *read_label (void);
 static char *
 read_label()
 {
@@ -711,7 +694,7 @@ read_label()
    compilation is complete, or a reference created by a `{' to be
    backpatched when the corresponding `}' is found.  */
 static struct sed_label *setup_label
-  P_((struct sed_label *, countT, char *, const struct error_info *));
+  (struct sed_label *, countT, char *, const struct error_info *);
 static struct sed_label *
 setup_label(list, idx, name, err_info)
   struct sed_label *list;
@@ -723,12 +706,12 @@ setup_label(list, idx, name, err_info)
   ret->v_index = idx;
   ret->name = name;
   if (err_info)
-    MEMCPY(&ret->err_info, err_info, sizeof (ret->err_info));
+    memcpy(&ret->err_info, err_info, sizeof (ret->err_info));
   ret->next = list;
   return ret;
 }
 
-static struct sed_label *release_label P_((struct sed_label *list_head));
+static struct sed_label *release_label (struct sed_label *list_head);
 static struct sed_label *
 release_label(list_head)
   struct sed_label *list_head;
@@ -739,22 +722,17 @@ release_label(list_head)
     return NULL;
   ret = list_head->next;
 
-  FREE(list_head->name);
+  free(list_head->name);
 
 #if 0
   /* We use obstacks */
-  FREE(list_head);
+  free(list_head);
 #endif
   return ret;
 }
 
-static struct replacement *new_replacement P_((char *, size_t,
-					       enum replacement_types));
 static struct replacement *
-new_replacement(text, length, type)
-  char *text;
-  size_t length;
-  enum replacement_types type;
+new_replacement(char *text, size_t length, enum replacement_types type)
 {
   struct replacement *r = OB_MALLOC(&obs, 1, struct replacement);
 
@@ -767,7 +745,7 @@ new_replacement(text, length, type)
   return r;
 }
 
-static void setup_replacement P_((struct subst *, const char *, size_t));
+static void setup_replacement (struct subst *, const char *, size_t);
 static void
 setup_replacement(sub, text, length)
      struct subst *sub;
@@ -794,7 +772,7 @@ setup_replacement(sub, text, length)
 	{
 	  /* Preceding the backslash may be some literal text: */
 	  tail = tail->next =
-	    new_replacement(base, CAST(size_t)(p - base), repl_type);
+	    new_replacement(base, (size_t)(p - base), repl_type);
 
 	  repl_type = save_type;
 
@@ -856,7 +834,7 @@ setup_replacement(sub, text, length)
 	{
 	  /* Preceding the ampersand may be some literal text: */
 	  tail = tail->next =
-	    new_replacement(base, CAST(size_t)(p - base), repl_type);
+	    new_replacement(base, (size_t)(p - base), repl_type);
 
 	  repl_type = save_type;
 	  tail->subst_id = 0;
@@ -866,13 +844,13 @@ setup_replacement(sub, text, length)
   /* There may be some trailing literal text: */
   if (base < text_end)
     tail = tail->next =
-      new_replacement(base, CAST(size_t)(text_end - base), repl_type);
+      new_replacement(base, (size_t)(text_end - base), repl_type);
 
   tail->next = NULL;
   sub->replacement = root.next;
 }
 
-static void read_text P_((struct text_buf *buf, int leadin_ch));
+static void read_text (struct text_buf *buf, int leadin_ch);
 static void
 read_text(buf, leadin_ch)
   struct text_buf *buf;
@@ -932,7 +910,7 @@ read_text(buf, leadin_ch)
    return non-zero and store the resulting address in `*addr'.
    If the input doesn't look like an address read nothing
    and return zero.  */
-static bool compile_address P_((struct addr *addr, int ch));
+static bool compile_address (struct addr *addr, int ch);
 static bool
 compile_address(addr, ch)
   struct addr *addr;
@@ -1030,7 +1008,7 @@ compile_address(addr, ch)
 
 /* Read a program (or a subprogram within `{' `}' pairs) in and store
    the compiled form in `*vector'.  Return a pointer to the new vector.  */
-static struct vector *compile_program P_((struct vector *));
+static struct vector *compile_program (struct vector *);
 static struct vector *
 compile_program(vector)
   struct vector *vector;
@@ -1095,11 +1073,11 @@ compile_program(vector)
       /* Do not accept extended commands in --posix mode.  Also,
 	 a few commands only accept one address in that mode.  */
       if (posixicity == POSIXLY_BASIC)
-	switch (ch)
-	  {
-	    case 'e': case 'v': case 'z': case 'L':
-	    case 'Q': case 'T': case 'R': case 'W':
-	      bad_command(ch);
+       switch (ch)
+         {
+           case 'e': case 'F': case 'v': case 'z': case 'L':
+           case 'Q': case 'T': case 'R': case 'W':
+             bad_command(ch);
 
 	    case 'a': case 'i': case 'l':
 	    case '=': case 'r':
@@ -1227,12 +1205,13 @@ compile_program(vector)
 
 	  break;
 
-	case '=':
-	case 'd':
-	case 'D':
-	case 'g':
-	case 'G':
-	case 'h':
+       case '=':
+       case 'd':
+       case 'D':
+       case 'F':
+       case 'g':
+       case 'G':
+       case 'h':
 	case 'H':
 	case 'n':
 	case 'N':
@@ -1259,7 +1238,7 @@ compile_program(vector)
 
         case 'W':
 	case 'w':
-	  cur_cmd->x.outf = get_openfile(&file_write, "w", true);
+	  cur_cmd->x.outf = get_openfile(&file_write, write_mode, true);
 	  break;
 
 	case 's':
@@ -1369,7 +1348,7 @@ compile_program(vector)
               {
 	        unsigned char *translate =
 		  OB_MALLOC(&obs, YMAP_LENGTH, unsigned char);
-                unsigned char *ustring = CAST(unsigned char *)src_buf;
+                unsigned char *ustring = (unsigned char *)src_buf;
 
 		if (len != dest_len)
                   bad_prog(_(Y_CMD_LEN));
@@ -1403,6 +1382,8 @@ compile_program(vector)
       /* this is buried down here so that "continue" statements will miss it */
       ++vector->v_length;
     }
+  if (posixicity == POSIXLY_BASIC && pending_text)
+    bad_prog (_(INCOMPLETE_CMD));
   return vector;
 }
 
@@ -1417,6 +1398,8 @@ normalize_text(buf, len, buftype)
   const char *bufend = buf + len;
   char *p = buf;
   char *q = buf;
+  char ch;
+  int base;
 
   /* This variable prevents normalizing text within bracket
      subexpressions when conforming to POSIX.  If 0, we
@@ -1432,7 +1415,6 @@ normalize_text(buf, len, buftype)
 
   while (p < bufend)
     {
-      int c;
       mbclen = MBRLEN (p, bufend - p, &cur_stat);
       if (mbclen != 1)
 	{
@@ -1448,7 +1430,7 @@ normalize_text(buf, len, buftype)
 	}
 
       if (*p == '\\' && p+1 < bufend && bracket_state == 0)
-	switch ( (c = *++p) )
+	switch (*++p)
 	  {
 #if defined __STDC__ && __STDC__-0
 	  case 'a': *q++ = '\a'; p++; continue;
@@ -1464,14 +1446,12 @@ normalize_text(buf, len, buftype)
 	  case 'v': *q++ = '\v'; p++; continue;
 
 	  case 'd': /* decimal byte */
-	    p = convert_number(q, p+1, bufend, 10, 3, 'd');
-	    q++;
-	    continue;
+            base = 10;
+            goto convert;
 
 	  case 'x': /* hexadecimal byte */
-	    p = convert_number(q, p+1, bufend, 16, 2, 'x');
-	    q++;
-	    continue;
+            base = 16;
+            goto convert;
 
 #ifdef REG_PERL
 	  case '0': case '1': case '2': case '3':
@@ -1480,8 +1460,8 @@ normalize_text(buf, len, buftype)
 		&& p+1 < bufend
 		&& p[1] >= '0' && p[1] <= '9')
 	      {
-		p = convert_number(q, p, bufend, 8, 3, *p);
-		q++;
+                base = 8;
+                goto convert;
 	      }
 	    else
 	      {
@@ -1495,8 +1475,8 @@ normalize_text(buf, len, buftype)
 	  case 'o': /* octal byte */
 	    if (!(extended_regexp_flags & REG_PERL))
 	      {
-	        p = convert_number(q, p+1, bufend,  8, 3, 'o');
-		q++;
+                base = 8;
+                goto convert;
 	      }
 	    else
 	      {
@@ -1508,15 +1488,21 @@ normalize_text(buf, len, buftype)
 	    continue;
 #else
 	  case 'o': /* octal byte */
-	    p = convert_number(q, p+1, bufend,  8, 3, 'o');
-	    q++;
-	    continue;
+            base = 8;
 #endif
+convert:
+            p = convert_number(&ch, p, bufend, base);
+
+            /* for an ampersand in a replacement, pass the \ up one level */
+            if (buftype == TEXT_REPLACEMENT && ch == '&')
+              *q++ = '\\';
+            *q++ = ch;
+            continue;
 
 	  case 'c':
 	    if (++p < bufend)
 	      {
-		*q++ = toupper(*p) ^ 0x40;
+		*q++ = toupper((unsigned char) *p) ^ 0x40;
 		p++;
 		continue;
 	      }
@@ -1577,7 +1563,7 @@ compile_string(cur_program, str, len)
   struct vector *ret;
 
   prog.file = NULL;
-  prog.base = CAST(unsigned char *)str;
+  prog.base = (unsigned char *)str;
   prog.cur = prog.base;
   prog.end = prog.cur + len;
 
@@ -1606,7 +1592,13 @@ compile_file(cur_program, cmdfile)
 
   prog.file = stdin;
   if (cmdfile[0] != '-' || cmdfile[1] != '\0')
-    prog.file = ck_fopen(cmdfile, "rt", true);
+    {
+#ifdef HAVE_FOPEN_RT
+      prog.file = ck_fopen(cmdfile, "rt", true);
+#else
+      prog.file = ck_fopen(cmdfile, "r", true);
+#endif
+    }
 
   cur_input.line = 1;
   cur_input.name = cmdfile;
@@ -1635,7 +1627,7 @@ check_final_program(program)
   if (blocks)
     {
       /* update info for error reporting: */
-      MEMCPY(&cur_input, &blocks->err_info, sizeof (cur_input));
+      memcpy(&cur_input, &blocks->err_info, sizeof (cur_input));
       bad_prog(_(EXCESS_OPEN_BRACE));
     }
 
@@ -1679,14 +1671,14 @@ check_final_program(program)
     for (p=file_read; p; p=p->link)
       if (p->name)
 	{
-	  FREE(p->name);
+	  free(p->name);
 	  p->name = NULL;
 	}
 
     for (p=file_write; p; p=p->link)
       if (p->name)
 	{
-	  FREE(p->name);
+	  free(p->name);
 	  p->name = NULL;
 	}
   }
@@ -1719,7 +1711,7 @@ finish_program(program)
 	q = p->link;
 #if 0
 	/* We use obstacks. */
-	FREE(p);
+	free(p);
 #endif
       }
 
@@ -1730,7 +1722,7 @@ finish_program(program)
 	q = p->link;
 #if 0
 	/* We use obstacks. */
-	FREE(p);
+	free(p);
 #endif
       }
     file_read = file_write = NULL;
